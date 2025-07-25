@@ -1,16 +1,18 @@
-# Archivos del sistema
+# Ignorar todo
+/*
+
+# Excepto estos archivos/carpetas
+!/.gitignore
+!/index.html
+!/javascript.js
+!/estilos.css
+!/golem_logo.png
+!/README.md
+
+# Ignorar archivos del sistema
 .DS_Store
 Thumbs.db
 
-# Dependencias
-node_modules/
-dist/
-
-# Archivos de entorno
-.env
-.env.local
-
-# Archivos de IDE
-.vscode/
-.idea/
-*.sublime-*
+# Ignorar archivos temporales
+*.tmp
+*.bak
