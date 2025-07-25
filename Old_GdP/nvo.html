@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Editor de imágenes</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .thumbnail {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
+
+        .thumbnail img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .form input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .form button {
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        <label for="size">Ingrese el tamaño de las imágenes:</label>
+        <input type="number" id="size" name="size" placeholder="Ingrese el tamaño" required>
+        <label for="unit">Seleccione la unidad:</label>
+        <select id="unit" name="unit">
+            <option value="px">Píxeles</option>
+            <option value="cm">Centímetros</option>
+            <option value="mm">Milímetros</option>
+        </select>
+        <button onclick="cropImages()">Editar imágenes</button>
+    </div>
+
+    <div class="container" id="thumbnails-container">
+        <!-- aquí se insertarán las miniaturas -->
+    </div>
+
+    <script>
+        function cropImages() {
+            const size = document.getElementById("size").value;
+            const unit = document.getElementById("unit").value;
+
+            const images = document.querySelectorAll(".thumbnail img");
+
+            images.forEach(img => {
+                // obtenemos la relación de aspecto de la imagen
+                const aspectRatio = img.width / img.height;
+
+                let width, height;
+
+                if (aspectRatio > 1) {
+                    // la imagen es más ancha que alta, se corta en altura
+                    height = img.height;
+                    width = height * aspectRatio;
+                } else {
+                    // la imagen es más alta que ancha, se corta en ancho
+                    width = img.width;
+                    height = width / aspectRatio;
+                }
+
+                // aplicamos el nuevo tamaño
+                switch (unit) {
+                    case "cm":
+                        width = size / 2.54 * 96;
+                        height = width / aspectRatio;
+                        break;
+                    case "mm":
+                        width = size / 25.4 * 96;
+                        height = width / aspectRatio;
+                        break;
+                    case "px":
+                    default:
+                        width = size;
+                        height = width / aspectRatio;
+                        break;
+                }
+
+                // creamos un canvas temporal para redimensionar la imagen
+                const canvas = document.createElement("canvas");
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+                // creamos una nueva imagen con la imagen redimensionada
+                const newImg = new Image();
+                newImg.src = canvas.toDataURL("image/jpeg");
+
+                // creamos una miniatura con la imagen redimensionada
+                const thumbnail = document.createElement("div");
+                thumbnail.classList.add("thumbnail");
+                thumbnail.appendChild(newImg);
+
+                // insertamos la miniatura en el contenedor de miniaturas
+                const thumbnailsContainer = document.getElementById("thumbnails-container");
+                thumbnailsContainer.appendChild(thumbnail);
+            });
+        }
+    </script>

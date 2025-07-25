@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .miniatura {
+        display: inline-block;
+        margin: 5px;
+        width: 100px;
+        height: 100px;
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+      }
+      
+      #miniaturas {
+        text-align: center;
+      }
+    </style>
+    <script>
+      var miniaturas = [];
+      
+      function mostrarMiniaturas(event) {
+        var archivos = event.target.files;
+        var miniaturasContenedor = document.getElementById("miniaturas");
+        miniaturasContenedor.innerHTML = "";
+        miniaturas = [];
+        
+        for (var i = 0; i < archivos.length; i++) {
+          var archivo = archivos[i];
+          
+          if (archivo.type.match("image.*")) {
+            var lector = new FileReader();
+            lector.onload = function(event) {
+              var urlImagen = event.target.result;
+              var contenedor = document.createElement("div");
+              contenedor.className = "miniatura";
+              contenedor.style.backgroundImage = "url('" + urlImagen + "')";
+              miniaturasContenedor.appendChild(contenedor);
+              miniaturas.push({ url: urlImagen, contenedor: contenedor });
+            };
+            lector.readAsDataURL(archivo);
+          }
+        }
+      }
+      
+      function aplicarCambios() {
+        var ancho = parseInt(document.getElementById("ancho").value);
+        var alto = parseInt(document.getElementById("alto").value);
+        var tamano = parseInt(document.getElementById("tamano").value) / 100;
+        
+        for (var i = 0; i < miniaturas.length; i++) {
+          var miniatura = miniaturas[i];
+          var imagen = new Image();
+          imagen.onload = function() {
+            var canvas = document.createElement("canvas");
+            var contexto = canvas.getContext("2d");
+            canvas.width = ancho * tamano;
+            canvas.height = alto * tamano;
+            contexto.drawImage(imagen, 0, 0, ancho * tamano, alto * tamano);
+            miniatura.url = canvas.toDataURL();
+            miniatura.contenedor.style.backgroundImage = "url('" + miniatura.url + "')";
+          };
+          imagen.src = miniatura.url;
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <input type="file" onchange="mostrarMiniaturas(event);" multiple>
+    
+    <div id="miniaturas"></div>
+    
+    <div>
+      <label for="ancho">Ancho:</label>
+      <input type="number" id="ancho" value="100">
+      <label for="alto">Alto:</label>
+      <input type="number" id="alto" value="100">
+      <label for="tamano">Tamaño (%):</label>
+      <input type="number" id="tamano" value="100">
+      <button onclick="aplicarCambios()">Aplicar cambios</button>
+    </div>
+  </body>
+</html>

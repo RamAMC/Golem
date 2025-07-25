@@ -1,0 +1,13 @@
+#miniaturas {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
