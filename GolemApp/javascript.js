@@ -188,8 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
         processedImages.push(canvas.toDataURL('image/png'));
         tempCanvases.push(canvas);
       }
-      // Habilitar descarga
+      // Habilitar descarga y generación de PDF
       downloadBtn.disabled = false;
+      document.getElementById('printPdfBtn').disabled = false;
       // Guardar las imágenes procesadas para descarga
       window.processedImages = processedImages;
     });
@@ -280,6 +281,128 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLinkedDimensions('width');
   });
 
+  // Constantes para tamaños de papel en mm
+const PAPER_SIZES = {
+    a4: { width: 210, height: 297 },
+    a3: { width: 297, height: 420 }
+};
+
+// Función para calcular la distribución de imágenes en la página
+function calculateLayout(images, paperSize, orientation, margin, spacing) {
+    if (!images || images.length === 0) {
+        throw new Error('No hay imágenes para calcular el layout');
+    }
+
+    const paper = PAPER_SIZES[paperSize];
+    const pageWidth = orientation === 'landscape' ? paper.height : paper.width;
+    const pageHeight = orientation === 'landscape' ? paper.width : paper.height;
+    const usableWidth = pageWidth - (margin * 2);
+    const usableHeight = pageHeight - (margin * 2);
+
+    // Obtener dimensiones de la primera imagen como referencia
+    const aspectRatio = images[0].width / images[0].height;
+    
+    // Calcular cuántas imágenes caben por fila y columna
+    let imagesPerRow = 1;
+    let imagesPerCol = 1;
+    let imageWidth = usableWidth;
+    let imageHeight = imageWidth / aspectRatio;
+
+    // Ajustar tamaño para que quepan más imágenes si es posible
+    while ((imageWidth - spacing) / 2 >= imageHeight) {
+        imagesPerRow++;
+        imageWidth = (usableWidth - (spacing * (imagesPerRow - 1))) / imagesPerRow;
+        imageHeight = imageWidth / aspectRatio;
+    }
+
+    while ((imageHeight - spacing) / 2 >= imageHeight) {
+        imagesPerCol++;
+        imageHeight = (usableHeight - (spacing * (imagesPerCol - 1))) / imagesPerCol;
+        imageWidth = imageHeight * aspectRatio;
+    }
+
+    return {
+        imagesPerPage: imagesPerRow * imagesPerCol,
+        imagesPerRow,
+        imagesPerCol,
+        imageWidth,
+        imageHeight,
+        totalPages: Math.ceil(images.length / (imagesPerRow * imagesPerCol))
+    };
+}
+
+// Función para generar el PDF
+async function generatePDF() {
+    if (!window.processedImages || window.processedImages.length === 0) {
+        console.error('No hay imágenes procesadas');
+        return;
+    }
+
+    const paperSize = document.getElementById('paperSize').value;
+    const printLayout = document.getElementById('printLayout').value;
+    const margin = parseInt(document.getElementById('printMargin').value);
+    const spacing = parseInt(document.getElementById('printSpacing').value);
+    
+    // Crear el PDF con el tamaño y orientación correctos
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+        orientation: printLayout,
+        unit: 'mm',
+        format: paperSize.toUpperCase()
+    });
+
+    // Obtener las dimensiones de la primera imagen
+    const img = new Image();
+    await new Promise((resolve) => {
+        img.onload = resolve;
+        img.src = window.processedImages[0];
+    });
+    
+    // Crear array de imágenes con las dimensiones correctas
+    const images = window.processedImages.map(() => ({
+        width: img.width,
+        height: img.height
+    }));
+    const layout = calculateLayout(images, paperSize, printLayout, margin, spacing);
+
+    let currentPage = 0;
+    for (let i = 0; i < window.processedImages.length; i++) {
+        const pageX = i % layout.imagesPerRow;
+        const pageY = Math.floor((i % layout.imagesPerPage) / layout.imagesPerRow);
+        
+        if (i > 0 && i % layout.imagesPerPage === 0) {
+            doc.addPage();
+            currentPage++;
+        }
+
+        const x = margin + (pageX * (layout.imageWidth + spacing));
+        const y = margin + (pageY * (layout.imageHeight + spacing));
+
+        // Usar la imagen procesada directamente
+        const imgData = window.processedImages[i];
+        doc.addImage(imgData, 'JPEG', x, y, layout.imageWidth, layout.imageHeight);
+    }
+
+    // Guardar el PDF
+    doc.save('golem_de_papel_impresion.pdf');
+}
+
+// Agregar event listener para el nuevo botón
+document.getElementById('printPdfBtn').addEventListener('click', generatePDF);
+
+// Actualizar el estado del botón de PDF cuando se procesen las imágenes
+function updatePrintButton() {
+    const printPdfBtn = document.getElementById('printPdfBtn');
+    const previewContainer = document.getElementById('previewContainer');
+    printPdfBtn.disabled = !previewContainer.hasChildNodes();
+}
+
+// Agregar la actualización del botón de PDF a la función existente de procesamiento
+async function processImages() {
+    // ... código existente de processImages ...
+    
+    updatePrintButton(); // Agregar esta línea al final de la función
+}
   /*
   // Botón de modo oscuro/claro
   const toggleDark = document.getElementById('toggleDark');
@@ -290,4 +413,4 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Nuevo estado:', !isDark ? 'oscuro' : 'claro');
   });
   */
-}); 
+});
