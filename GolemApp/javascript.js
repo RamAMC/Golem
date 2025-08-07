@@ -287,103 +287,133 @@ const PAPER_SIZES = {
     a3: { width: 297, height: 420 }
 };
 
-// Función para calcular la distribución de imágenes en la página
-function calculateLayout(images, paperSize, orientation, margin, spacing) {
-    if (!images || images.length === 0) {
-        throw new Error('No hay imágenes para calcular el layout');
+// Función para calcular la distribución de imágenes en la página (CORREGIDA)
+function calculateLayout(imageAspectRatio, paperConfig, orientation, margin, spacing) {
+    if (!imageAspectRatio || imageAspectRatio <= 0) {
+        throw new Error('La relación de aspecto de la imagen no es válida.');
     }
 
-    const paper = PAPER_SIZES[paperSize];
+    const paper = paperConfig;
     const pageWidth = orientation === 'landscape' ? paper.height : paper.width;
     const pageHeight = orientation === 'landscape' ? paper.width : paper.height;
     const usableWidth = pageWidth - (margin * 2);
     const usableHeight = pageHeight - (margin * 2);
 
-    // Obtener dimensiones de la primera imagen como referencia
-    const aspectRatio = images[0].width / images[0].height;
-    
-    // Calcular cuántas imágenes caben por fila y columna
-    let imagesPerRow = 1;
-    let imagesPerCol = 1;
-    let imageWidth = usableWidth;
-    let imageHeight = imageWidth / aspectRatio;
-
-    // Ajustar tamaño para que quepan más imágenes si es posible
-    while ((imageWidth - spacing) / 2 >= imageHeight) {
-        imagesPerRow++;
-        imageWidth = (usableWidth - (spacing * (imagesPerRow - 1))) / imagesPerRow;
-        imageHeight = imageWidth / aspectRatio;
-    }
-
-    while ((imageHeight - spacing) / 2 >= imageHeight) {
-        imagesPerCol++;
-        imageHeight = (usableHeight - (spacing * (imagesPerCol - 1))) / imagesPerCol;
-        imageWidth = imageHeight * aspectRatio;
-    }
-
-    return {
-        imagesPerPage: imagesPerRow * imagesPerCol,
-        imagesPerRow,
-        imagesPerCol,
-        imageWidth,
-        imageHeight,
-        totalPages: Math.ceil(images.length / (imagesPerRow * imagesPerCol))
+    let bestLayout = {
+        imagesPerPage: 0,
+        imagesPerRow: 0,
+        imagesPerCol: 0,
+        imageWidth: 0,
+        imageHeight: 0,
     };
+
+    // Estrategia 1: Ajustar al ancho y ver cuántas filas caben
+    for (let cols = 1; cols < 50; cols++) {
+        const totalSpacingX = (cols - 1) * spacing;
+        const imgWidth = (usableWidth - totalSpacingX) / cols;
+        if (imgWidth <= 0) break;
+
+        const imgHeight = imgWidth / imageAspectRatio;
+        const rows = Math.floor((usableHeight + spacing) / (imgHeight + spacing));
+        if (rows <= 0) continue;
+
+        const numImages = cols * rows;
+        if (numImages > bestLayout.imagesPerPage) {
+            bestLayout = {
+                imagesPerPage: numImages,
+                imagesPerRow: cols,
+                imagesPerCol: rows,
+                imageWidth: imgWidth,
+                imageHeight: imgHeight,
+            };
+        }
+    }
+
+    // Estrategia 2: Ajustar al alto y ver cuántas columnas caben
+    for (let rows = 1; rows < 50; rows++) {
+        const totalSpacingY = (rows - 1) * spacing;
+        const imgHeight = (usableHeight - totalSpacingY) / rows;
+        if (imgHeight <= 0) break;
+
+        const imgWidth = imgHeight * imageAspectRatio;
+        const cols = Math.floor((usableWidth + spacing) / (imgWidth + spacing));
+        if (cols <= 0) continue;
+
+        const numImages = cols * rows;
+        // Solo actualizar si es estrictamente mejor, para priorizar la primera estrategia
+        // en caso de empate (generalmente resulta en imágenes más grandes).
+        if (numImages > bestLayout.imagesPerPage) {
+            bestLayout = {
+                imagesPerPage: numImages,
+                imagesPerRow: cols,
+                imagesPerCol: rows,
+                imageWidth: imgWidth,
+                imageHeight: imgHeight,
+            };
+        }
+    }
+
+    return bestLayout;
 }
 
-// Función para generar el PDF
+
+// Función para generar el PDF (CORREGIDA)
 async function generatePDF() {
     if (!window.processedImages || window.processedImages.length === 0) {
         console.error('No hay imágenes procesadas');
+        alert('Primero debes procesar las imágenes antes de generar un PDF.');
         return;
     }
 
     const paperSize = document.getElementById('paperSize').value;
     const printLayout = document.getElementById('printLayout').value;
-    const margin = parseInt(document.getElementById('printMargin').value);
-    const spacing = parseInt(document.getElementById('printSpacing').value);
+    const margin = parseInt(document.getElementById('printMargin').value, 10);
+    const spacing = parseInt(document.getElementById('printSpacing').value, 10);
     
-    // Crear el PDF con el tamaño y orientación correctos
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({
         orientation: printLayout,
         unit: 'mm',
-        format: paperSize.toUpperCase()
+        format: paperSize, // Corregido: sin toUpperCase()
     });
 
-    // Obtener las dimensiones de la primera imagen
+    // Obtener la relación de aspecto de la primera imagen (todas son iguales)
     const img = new Image();
     await new Promise((resolve) => {
         img.onload = resolve;
         img.src = window.processedImages[0];
     });
+    const imageAspectRatio = img.width / img.height;
     
-    // Crear array de imágenes con las dimensiones correctas
-    const images = window.processedImages.map(() => ({
-        width: img.width,
-        height: img.height
-    }));
-    const layout = calculateLayout(images, paperSize, printLayout, margin, spacing);
+    const paperConfig = PAPER_SIZES[paperSize];
+    const layout = calculateLayout(imageAspectRatio, paperConfig, printLayout, margin, spacing);
 
-    let currentPage = 0;
-    for (let i = 0; i < window.processedImages.length; i++) {
-        const pageX = i % layout.imagesPerRow;
-        const pageY = Math.floor((i % layout.imagesPerPage) / layout.imagesPerRow);
-        
-        if (i > 0 && i % layout.imagesPerPage === 0) {
-            doc.addPage();
-            currentPage++;
-        }
-
-        const x = margin + (pageX * (layout.imageWidth + spacing));
-        const y = margin + (pageY * (layout.imageHeight + spacing));
-
-        // Usar la imagen procesada directamente
-        const imgData = window.processedImages[i];
-        doc.addImage(imgData, 'JPEG', x, y, layout.imageWidth, layout.imageHeight);
+    if (layout.imagesPerPage === 0) {
+        console.error("No se pudo colocar ninguna imagen en la página con la configuración actual.");
+        alert("No se pudo colocar ninguna imagen en la página con la configuración actual. Intenta reducir el margen o el espaciado.");
+        return;
     }
 
-    // Guardar el PDF
+    for (let i = 0; i < window.processedImages.length; i++) {
+        // Calcular la posición en la página actual
+        const imageOnPageIndex = i % layout.imagesPerPage;
+        const col = imageOnPageIndex % layout.imagesPerRow;
+        const row = Math.floor(imageOnPageIndex / layout.imagesPerRow);
+        
+        // Agregar nueva página si es necesario
+        if (i > 0 && imageOnPageIndex === 0) {
+            doc.addPage();
+        }
+
+        const x = margin + col * (layout.imageWidth + spacing);
+        const y = margin + row * (layout.imageHeight + spacing);
+
+        const imgData = window.processedImages[i];
+        // El formato de imagen se asume como PNG por `toDataURL` en el procesamiento.
+        // Usar 'PNG' puede ser más robusto que 'JPEG'.
+        doc.addImage(imgData, 'PNG', x, y, layout.imageWidth, layout.imageHeight);
+    }
+
     doc.save('golem_de_papel_impresion.pdf');
 }
 
