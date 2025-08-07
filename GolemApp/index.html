@@ -62,39 +62,55 @@
           <option value="16:9">16:9</option>
         </select>
       </div>
-      <div class="watermark-controls bg-stone-50 dark:bg-stone-800 p-3 rounded mb-4 dark:border dark:border-stone-700">
-        <h3 class="text-lg font-semibold mb-2 dark:text-stone-300 tracking-tight">Secuencia (marca de agua)</h3>
-        <div class="flex flex-wrap items-center gap-2 mb-2">
-          <label for="wmSize" class="dark:text-stone-300">Tamaño (% altura):</label>
-          <input type="range" id="wmSize" min="5" max="20" value="8" class="dark:accent-orange-600 accent-blue-600">
-          <span id="wmSizeVal">8</span>%
+      <div class="bg-stone-50 dark:bg-stone-800 p-3 rounded mb-4 dark:border dark:border-stone-700">
+        <div class="flex items-center mb-2">
+          <input type="checkbox" id="enableWm" checked class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:bg-stone-700 dark:border-stone-600 dark:checked:bg-orange-600">
+          <label for="enableWm" class="ml-2 text-lg font-semibold dark:text-stone-300 tracking-tight">Secuencia (marca de agua)</label>
         </div>
-        <div class="flex flex-wrap items-center gap-2 mb-2">
-          <label for="wmColor" class="dark:text-stone-300">Color:</label>
-          <input type="color" id="wmColor" value="#f7f304" class="w-8 h-8 p-0 border-0">
-        </div>
-        <div class="flex flex-wrap items-center gap-2 mb-2">
-          <label for="wmAlpha" class="dark:text-stone-300">Opacidad:</label>
-          <input type="range" id="wmAlpha" min="10" max="100" value="70" class="dark:accent-orange-600 accent-blue-600">
-          <span id="wmAlphaVal">70</span>%
-        </div>
-        <div class="flex flex-wrap items-center gap-2 mb-2">
-          <label for="wmFont" class="dark:text-stone-300">Fuente:</label>
-          <select id="wmFont" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
-            <option value="Arial">Arial</option>
-            <option value="Verdana">Verdana</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Times New Roman">Times New Roman</option>
-          </select>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-          <label for="wmPos" class="dark:text-stone-300">Posición:</label>
-          <select id="wmPos" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
-            <option value="br">Inferior derecha</option>
-            <option value="bl">Inferior izquierda</option>
-            <option value="tr">Superior derecha</option>
-            <option value="tl">Superior izquierda</option>
-          </select>
+
+        <div id="watermark-controls">
+            <div class="flex flex-col md:flex-row gap-4">
+                <!-- Columna de Controles -->
+                <div class="flex-1">
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                      <label for="wmSize" class="dark:text-stone-300">Tamaño (% altura):</label>
+                      <input type="range" id="wmSize" min="5" max="20" value="8" class="dark:accent-orange-600 accent-blue-600">
+                      <span id="wmSizeVal">8</span>%
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                      <label for="wmColor" class="dark:text-stone-300">Color:</label>
+                      <input type="color" id="wmColor" value="#f7f304" class="w-8 h-8 p-0 border-0">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                      <label for="wmAlpha" class="dark:text-stone-300">Opacidad:</label>
+                      <input type="range" id="wmAlpha" min="10" max="100" value="70" class="dark:accent-orange-600 accent-blue-600">
+                      <span id="wmAlphaVal">70</span>%
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 mb-2">
+                      <label for="wmFont" class="dark:text-stone-300">Fuente:</label>
+                      <select id="wmFont" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+                        <option value="Arial">Arial</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                      </select>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                      <label for="wmPos" class="dark:text-stone-300">Posición:</label>
+                      <select id="wmPos" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+                        <option value="br">Inferior derecha</option>
+                        <option value="bl">Inferior izquierda</option>
+                        <option value="tr">Superior derecha</option>
+                        <option value="tl">Superior izquierda</option>
+                      </select>
+                    </div>
+                </div>
+                <!-- Columna de Preview -->
+                <div class="flex-shrink-0">
+                    <label class="block text-sm font-medium dark:text-stone-300 mb-1">Vista Previa:</label>
+                    <canvas id="wmPreview" width="120" height="120" class="bg-gray-300 dark:bg-stone-600 rounded"></canvas>
+                </div>
+            </div>
         </div>
       </div>
     </div>

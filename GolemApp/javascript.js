@@ -32,14 +32,85 @@ document.getElementById('toggleDark').checked = document.documentElement.classLi
 
 // Lógica para cargar, ordenar y previsualizar imágenes
 document.addEventListener('DOMContentLoaded', () => {
+  // Elementos principales
   const fileInput = document.getElementById('fileInput');
   const previewContainer = document.getElementById('previewContainer');
   const processBtn = document.getElementById('processBtn');
   const downloadBtn = document.getElementById('downloadBtn');
   const printPdfBtn = document.getElementById('printPdfBtn');
 
+  // Elementos de la marca de agua
+  const enableWm = document.getElementById('enableWm');
+  const wmControlsContainer = document.getElementById('watermark-controls');
+  const wmPreviewCanvas = document.getElementById('wmPreview');
+  const wmControls = ['wmSize', 'wmColor', 'wmAlpha', 'wmFont', 'wmPos'];
+
   let images = [];
   window.processedImages = [];
+
+  // --- Lógica de la Marca de Agua ---
+
+  function updateWatermarkPreview() {
+    const ctx = wmPreviewCanvas.getContext('2d');
+    const w = wmPreviewCanvas.width;
+    const h = wmPreviewCanvas.height;
+
+    // Fondo de la preview
+    ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#44403c' : '#d6d3d1';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#a8a29e' : '#78716c';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '14px Arial';
+    ctx.fillText('Preview', w / 2, h / 2);
+
+    if (!enableWm.checked) return;
+
+    // Aplicar marca de agua
+    const numero = '1';
+    const wmSize = parseInt(document.getElementById('wmSize').value, 10);
+    const wmColor = document.getElementById('wmColor').value;
+    const wmAlpha = parseInt(document.getElementById('wmAlpha').value, 10) / 100;
+    const wmFont = document.getElementById('wmFont').value;
+    const wmPos = document.getElementById('wmPos').value;
+    const fontSize = Math.floor(h * (wmSize / 100));
+    let x, y, align, baseline;
+
+    switch (wmPos) {
+      case 'br': x = w - 5; y = h - 5; align = 'right'; baseline = 'bottom'; break;
+      case 'bl': x = 5; y = h - 5; align = 'left'; baseline = 'bottom'; break;
+      case 'tr': x = w - 5; y = 5 + fontSize; align = 'right'; baseline = 'top'; break;
+      case 'tl': x = 5; y = 5 + fontSize; align = 'left'; baseline = 'top'; break;
+    }
+
+    ctx.save();
+    ctx.font = `${fontSize}px ${wmFont}`;
+    ctx.textAlign = align;
+    ctx.textBaseline = baseline;
+    ctx.globalAlpha = wmAlpha;
+    ctx.fillStyle = wmColor;
+    ctx.fillText(numero, x, y);
+    ctx.restore();
+  }
+
+  enableWm.addEventListener('change', () => {
+    wmControlsContainer.style.display = enableWm.checked ? 'block' : 'none';
+    updateWatermarkPreview();
+  });
+
+  wmControls.forEach(id => {
+    document.getElementById(id).addEventListener('input', updateWatermarkPreview);
+    document.getElementById(id).addEventListener('change', updateWatermarkPreview);
+  });
+
+  document.getElementById('wmSize').addEventListener('input', (e) => {
+    document.getElementById('wmSizeVal').textContent = e.target.value;
+  });
+  document.getElementById('wmAlpha').addEventListener('input', (e) => {
+    document.getElementById('wmAlphaVal').textContent = e.target.value;
+  });
+
+  // --- Lógica Principal de la App ---
 
   fileInput.addEventListener('change', (event) => {
     const files = Array.from(event.target.files);
@@ -123,30 +194,32 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.drawImage(imgTop, 0, 0, width, halfHeight, 0, 0, width, halfHeight);
         ctx.drawImage(imgBottom, 0, halfHeight, width, height - halfHeight, 0, halfHeight, width, height - halfHeight);
 
-        const numero = (i + 1).toString();
-        const wmSize = parseInt(document.getElementById('wmSize').value, 10);
-        const wmColor = document.getElementById('wmColor').value;
-        const wmAlpha = parseInt(document.getElementById('wmAlpha').value, 10) / 100;
-        const wmFont = document.getElementById('wmFont').value;
-        const wmPos = document.getElementById('wmPos').value;
-        const fontSize = Math.floor(height * (wmSize / 100));
-        let x, y, align, baseline;
+        if (enableWm.checked) {
+            const numero = (i + 1).toString();
+            const wmSize = parseInt(document.getElementById('wmSize').value, 10);
+            const wmColor = document.getElementById('wmColor').value;
+            const wmAlpha = parseInt(document.getElementById('wmAlpha').value, 10) / 100;
+            const wmFont = document.getElementById('wmFont').value;
+            const wmPos = document.getElementById('wmPos').value;
+            const fontSize = Math.floor(height * (wmSize / 100));
+            let x, y, align, baseline;
 
-        switch (wmPos) {
-          case 'br': x = width - 15; y = height - 15; align = 'right'; baseline = 'bottom'; break;
-          case 'bl': x = 15; y = height - 15; align = 'left'; baseline = 'bottom'; break;
-          case 'tr': x = width - 15; y = 15 + fontSize; align = 'right'; baseline = 'top'; break;
-          case 'tl': x = 15; y = 15 + fontSize; align = 'left'; baseline = 'top'; break;
+            switch (wmPos) {
+              case 'br': x = width - 15; y = height - 15; align = 'right'; baseline = 'bottom'; break;
+              case 'bl': x = 15; y = height - 15; align = 'left'; baseline = 'bottom'; break;
+              case 'tr': x = width - 15; y = 15 + fontSize; align = 'right'; baseline = 'top'; break;
+              case 'tl': x = 15; y = 15 + fontSize; align = 'left'; baseline = 'top'; break;
+            }
+
+            ctx.save();
+            ctx.font = `${fontSize}px ${wmFont}`;
+            ctx.textAlign = align;
+            ctx.textBaseline = baseline;
+            ctx.globalAlpha = wmAlpha;
+            ctx.fillStyle = wmColor;
+            ctx.fillText(numero, x, y);
+            ctx.restore();
         }
-
-        ctx.save();
-        ctx.font = `${fontSize}px ${wmFont}`;
-        ctx.textAlign = align;
-        ctx.textBaseline = baseline;
-        ctx.globalAlpha = wmAlpha;
-        ctx.fillStyle = wmColor;
-        ctx.fillText(numero, x, y);
-        ctx.restore();
 
         const resultImg = document.createElement('img');
         resultImg.src = canvas.toDataURL('image/png');
@@ -219,13 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.removeChild(a);
   });
 
-  document.getElementById('wmSize').addEventListener('input', (e) => {
-    document.getElementById('wmSizeVal').textContent = e.target.value;
-  });
-  document.getElementById('wmAlpha').addEventListener('input', (e) => {
-    document.getElementById('wmAlphaVal').textContent = e.target.value;
-  });
-
   function updateLinkedDimensions(changed) {
     const aspectValue = document.getElementById('aspectRatio').value;
     const [aspectW, aspectH] = aspectValue.split(':').map(Number);
@@ -253,9 +319,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let widthVal = parseFloat(outWidthInput.value);
     let heightVal = parseFloat(outHeightInput.value);
 
-    // Sugerir valores por defecto al cambiar de unidad
     if (unit === 'mm' && !isNaN(widthVal)) {
-        outWidthInput.value = (widthVal / 37.8).toFixed(1); // 37.8 px/cm a 96 DPI
+        outWidthInput.value = (widthVal / 37.8).toFixed(1);
         outHeightInput.value = (heightVal / 37.8).toFixed(1);
     } else if (unit === 'px' && !isNaN(widthVal)) {
         outWidthInput.value = Math.round(widthVal * 37.8);
@@ -342,4 +407,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   printPdfBtn.addEventListener('click', generatePDF);
+
+  // Inicializar estado de la UI
+  updateWatermarkPreview();
+  wmControlsContainer.style.display = enableWm.checked ? 'block' : 'none';
 });
