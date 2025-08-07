@@ -83,6 +83,9 @@
                         </select>
                     </div>
                 </div>
+                <div id="initialPreviewContainer" class="mt-6 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4">
+                    <!-- Previsualización de imágenes cargadas -->
+                </div>
             </section>
 
             <!-- PASO 2: Marca de Agua -->
@@ -217,10 +220,9 @@
                 <div class="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
                     <h3 class="font-bold text-lg text-blue-700 dark:text-orange-400">Generar PDF para Imprimir</h3>
                     <div class="flex flex-wrap items-center gap-2">
-                        <label for="outUnit" class="dark:text-stone-300">Tamaño (mm):</label>
+                        <label for="outWidthMm" class="dark:text-stone-300">Tamaño (mm):</label>
                         <input type="number" id="outWidthMm" step="0.1" min="5" max="500" value="80" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
                         <input type="number" id="outHeightMm" step="0.1" min="5" max="500" value="60" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                        <input type="hidden" id="outUnit" value="px">
                     </div>
                     <div class="print-controls">
                         <div class="flex flex-col md:flex-row gap-4">
