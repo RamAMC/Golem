@@ -36,20 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewContainer = document.getElementById('previewContainer');
   const processBtn = document.getElementById('processBtn');
   const downloadBtn = document.getElementById('downloadBtn');
+  const printPdfBtn = document.getElementById('printPdfBtn');
 
   let images = [];
+  window.processedImages = [];
 
   fileInput.addEventListener('change', (event) => {
     const files = Array.from(event.target.files);
     if (files.length === 0) return;
 
-    // Ordenar archivos por nombre
     files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
-
     images = [];
     previewContainer.innerHTML = '';
 
-    files.forEach((file, idx) => {
+    files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = document.createElement('img');
@@ -66,33 +66,27 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Los siguientes botones se habilitarán y tendrán lógica en los siguientes pasos
   processBtn.addEventListener('click', () => {
     if (images.length === 0) return;
+
     const processedImages = [];
-    const tempCanvases = [];
     previewContainer.innerHTML = '';
 
-    // Obtener relación de aspecto seleccionada
     const aspectRatioSelect = document.getElementById('aspectRatio');
     const aspectValue = aspectRatioSelect.value;
     const [aspectW, aspectH] = aspectValue.split(':').map(Number);
     const targetAspect = aspectW / aspectH;
 
-    // Primero, cargar todas las imágenes en objetos Image
     const imgElements = images.map(imgObj => {
       const img = new window.Image();
       img.src = imgObj.src;
       return img;
     });
 
-    Promise.all(imgElements.map(img => new Promise(res => {
-      img.onload = () => res();
-    }))).then(() => {
-      // Determinar tamaño base: el menor ancho y alto posibles para todas las imágenes
+    Promise.all(imgElements.map(img => new Promise(res => { if(img.complete) res(); else img.onload = res; }))).then(() => {
       let minWidth = Math.min(...imgElements.map(img => img.naturalWidth));
       let minHeight = Math.min(...imgElements.map(img => img.naturalHeight));
-      // Ajustar a la relación de aspecto elegida
+
       let cropWidth = minWidth;
       let cropHeight = Math.round(cropWidth / targetAspect);
       if (cropHeight > minHeight) {
@@ -100,9 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cropWidth = Math.round(cropHeight * targetAspect);
       }
 
-      // Recortar todas las imágenes a la relación de aspecto seleccionada
       const croppedImages = imgElements.map(img => {
-        // Centrar el recorte
         const sx = Math.floor((img.naturalWidth - cropWidth) / 2);
         const sy = Math.floor((img.naturalHeight - cropHeight) / 2);
         const canvas = document.createElement('canvas');
@@ -117,51 +109,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const height = cropHeight;
       const halfHeight = Math.floor(height / 2);
 
-      // Actualizar los valores de los inputs de salida
       document.getElementById('outWidth').value = width;
       document.getElementById('outHeight').value = height;
+      document.getElementById('outUnit').value = 'px';
 
-      // Cortar mitades y recombinar
       for (let i = 0; i < croppedImages.length; i++) {
-        // Mitad superior de la imagen i
-        // Mitad inferior de la imagen (i+1)%N
         const imgTop = croppedImages[i];
         const imgBottom = croppedImages[(i + 1) % croppedImages.length];
-
-        // Crear canvas para la nueva imagen
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
-
-        // Dibujar mitad superior
         ctx.drawImage(imgTop, 0, 0, width, halfHeight, 0, 0, width, halfHeight);
-        // Dibujar mitad inferior
         ctx.drawImage(imgBottom, 0, halfHeight, width, height - halfHeight, 0, halfHeight, width, height - halfHeight);
 
-        // Agregar número de secuencia como marca de agua (personalizable)
         const numero = (i + 1).toString();
-        // Obtener opciones de marca de agua
-        const wmSize = parseInt(document.getElementById('wmSize').value, 10); // % altura
+        const wmSize = parseInt(document.getElementById('wmSize').value, 10);
         const wmColor = document.getElementById('wmColor').value;
-        const wmAlphaSlider = document.getElementById('wmAlpha');
-        // Invertir el valor: 100% = opaco, 10% = transparente
-        const wmAlpha = (parseInt(wmAlphaSlider.value, 10)) / 100;
+        const wmAlpha = parseInt(document.getElementById('wmAlpha').value, 10) / 100;
         const wmFont = document.getElementById('wmFont').value;
         const wmPos = document.getElementById('wmPos').value;
-        // Calcular posición
         const fontSize = Math.floor(height * (wmSize / 100));
         let x, y, align, baseline;
+
         switch (wmPos) {
-          case 'br': // inferior derecha
-            x = width - 15; y = height - 15; align = 'right'; baseline = 'bottom'; break;
-          case 'bl': // inferior izquierda
-            x = 15; y = height - 15; align = 'left'; baseline = 'bottom'; break;
-          case 'tr': // superior derecha
-            x = width - 15; y = 15 + fontSize; align = 'right'; baseline = 'top'; break;
-          case 'tl': // superior izquierda
-            x = 15; y = 15 + fontSize; align = 'left'; baseline = 'top'; break;
+          case 'br': x = width - 15; y = height - 15; align = 'right'; baseline = 'bottom'; break;
+          case 'bl': x = 15; y = height - 15; align = 'left'; baseline = 'bottom'; break;
+          case 'tr': x = width - 15; y = 15 + fontSize; align = 'right'; baseline = 'top'; break;
+          case 'tl': x = 15; y = 15 + fontSize; align = 'left'; baseline = 'top'; break;
         }
+
         ctx.save();
         ctx.font = `${fontSize}px ${wmFont}`;
         ctx.textAlign = align;
@@ -169,199 +146,164 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.globalAlpha = wmAlpha;
         ctx.fillStyle = wmColor;
         ctx.fillText(numero, x, y);
-        ctx.globalAlpha = 1;
-        // ctx.strokeStyle = '#fff';
-        // ctx.lineWidth = 2;
-        // ctx.strokeText(numero, x, y);
         ctx.restore();
 
-        // Mostrar la imagen resultante
         const resultImg = document.createElement('img');
         resultImg.src = canvas.toDataURL('image/png');
         resultImg.className = 'preview-img';
-        // Al hacer click, abrir la imagen en tamaño completo en una nueva ventana
         resultImg.addEventListener('click', () => {
           const win = window.open();
-          win.document.write('<img src="' + resultImg.src + '" style="max-width:100vw;max-height:100vh;display:block;margin:auto;">');
+          win.document.write(`<img src="${resultImg.src}" style="max-width:100vw;max-height:100vh;display:block;margin:auto;">`);
         });
         previewContainer.appendChild(resultImg);
         processedImages.push(canvas.toDataURL('image/png'));
-        tempCanvases.push(canvas);
       }
-      // Habilitar descarga y generación de PDF
-      downloadBtn.disabled = false;
-      document.getElementById('printPdfBtn').disabled = false;
-      // Guardar las imágenes procesadas para descarga
+
       window.processedImages = processedImages;
+      downloadBtn.disabled = false;
+      printPdfBtn.disabled = false;
     });
   });
 
   downloadBtn.addEventListener('click', async () => {
     if (!window.processedImages || window.processedImages.length === 0) return;
-    // Obtener opciones de salida
+
+    const unit = document.getElementById('outUnit').value;
+    if (unit !== 'px') {
+      alert('Para descargar imágenes en un ZIP, por favor establece las dimensiones de salida en píxeles (px).');
+      return;
+    }
+
     const outWidth = parseInt(document.getElementById('outWidth').value, 10);
     const outHeight = parseInt(document.getElementById('outHeight').value, 10);
     const outFormat = document.getElementById('outFormat').value;
-    // Verificar si JSZip está disponible
+
     if (typeof JSZip === 'undefined') {
-      alert('Para descargar como ZIP, primero incluye JSZip en tu proyecto.');
+      alert('JSZip no está cargado.');
       return;
     }
     const zip = new JSZip();
+
     for (let idx = 0; idx < window.processedImages.length; idx++) {
       const dataUrl = window.processedImages[idx];
-      // Crear imagen temporal
       const img = new window.Image();
       img.src = dataUrl;
       await new Promise(res => { img.onload = res; });
-      // Redimensionar a tamaño final
+
       const canvas = document.createElement('canvas');
       canvas.width = outWidth;
       canvas.height = outHeight;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, outWidth, outHeight);
-      // Exportar en formato seleccionado
+
       let ext = outFormat;
-      let mime = 'image/png';
-      if (outFormat === 'jpeg') { mime = 'image/jpeg'; ext = 'jpg'; }
-      if (outFormat === 'webp') { mime = 'image/webp'; ext = 'webp'; }
+      let mime = `image/${outFormat}`;
+      if (outFormat === 'jpeg') ext = 'jpg';
+
       const outDataUrl = canvas.toDataURL(mime);
-      // Obtener nombre original de la imagen superior usada en la recombinación
       let origName = images[idx]?.name || `imagen_${idx+1}`;
-      origName = origName.replace(/\.[^.]+$/, ''); // quitar extensión
+      origName = origName.replace(/\.[^.]+$/, '');
       const finalName = `${origName}_${idx+1}.${ext}`;
-      // Convertir dataURL a blob
-      const arr = outDataUrl.split(',');
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-      while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-      zip.file(finalName, new Blob([u8arr], {type: mime}));
+
+      const res = await fetch(outDataUrl);
+      const blob = await res.blob();
+      zip.file(finalName, blob);
     }
+
     const content = await zip.generateAsync({type: 'blob'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(content);
-    a.download = `imagenes_procesadas.zip`;
+    a.download = 'imagenes_procesadas.zip';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   });
 
-  // Actualizar valores de sliders en tiempo real
-  document.getElementById('wmSize').addEventListener('input', function() {
-    document.getElementById('wmSizeVal').textContent = this.value;
+  document.getElementById('wmSize').addEventListener('input', (e) => {
+    document.getElementById('wmSizeVal').textContent = e.target.value;
   });
-  document.getElementById('wmAlpha').addEventListener('input', function() {
-    document.getElementById('wmAlphaVal').textContent = this.value;
+  document.getElementById('wmAlpha').addEventListener('input', (e) => {
+    document.getElementById('wmAlphaVal').textContent = e.target.value;
   });
 
-  // Vincular ancho y alto final a la relación de aspecto seleccionada
   function updateLinkedDimensions(changed) {
     const aspectValue = document.getElementById('aspectRatio').value;
     const [aspectW, aspectH] = aspectValue.split(':').map(Number);
     const ratio = aspectW / aspectH;
     const outWidthInput = document.getElementById('outWidth');
     const outHeightInput = document.getElementById('outHeight');
-    if (changed === 'width') {
-      outHeightInput.value = Math.round(outWidthInput.value / ratio);
-    } else if (changed === 'height') {
-      outWidthInput.value = Math.round(outHeightInput.value * ratio);
+    let widthVal = parseFloat(outWidthInput.value);
+    let heightVal = parseFloat(outHeightInput.value);
+
+    if (changed === 'width' && !isNaN(widthVal)) {
+      outHeightInput.value = (widthVal / ratio).toFixed(1);
+    } else if (changed === 'height' && !isNaN(heightVal)) {
+      outWidthInput.value = (heightVal * ratio).toFixed(1);
     }
   }
-  document.getElementById('outWidth').addEventListener('input', function() {
-    updateLinkedDimensions('width');
-  });
-  document.getElementById('outHeight').addEventListener('input', function() {
-    updateLinkedDimensions('height');
-  });
-  document.getElementById('aspectRatio').addEventListener('change', function() {
-    // Al cambiar la relación de aspecto, recalcular el alto en base al ancho actual
-    updateLinkedDimensions('width');
+
+  document.getElementById('outWidth').addEventListener('input', () => updateLinkedDimensions('width'));
+  document.getElementById('outHeight').addEventListener('input', () => updateLinkedDimensions('height'));
+  document.getElementById('aspectRatio').addEventListener('change', () => updateLinkedDimensions('width'));
+
+  document.getElementById('outUnit').addEventListener('change', function() {
+    const unit = this.value;
+    const outWidthInput = document.getElementById('outWidth');
+    const outHeightInput = document.getElementById('outHeight');
+    let widthVal = parseFloat(outWidthInput.value);
+    let heightVal = parseFloat(outHeightInput.value);
+
+    // Sugerir valores por defecto al cambiar de unidad
+    if (unit === 'mm' && !isNaN(widthVal)) {
+        outWidthInput.value = (widthVal / 37.8).toFixed(1); // 37.8 px/cm a 96 DPI
+        outHeightInput.value = (heightVal / 37.8).toFixed(1);
+    } else if (unit === 'px' && !isNaN(widthVal)) {
+        outWidthInput.value = Math.round(widthVal * 37.8);
+        outHeightInput.value = Math.round(heightVal * 37.8);
+    }
   });
 
-  // Constantes para tamaños de papel en mm
-const PAPER_SIZES = {
+  const PAPER_SIZES = {
     a4: { width: 210, height: 297 },
     a3: { width: 297, height: 420 }
-};
+  };
 
-// Función para calcular la distribución de imágenes en la página (CORREGIDA)
-function calculateLayout(imageAspectRatio, paperConfig, orientation, margin, spacing) {
-    if (!imageAspectRatio || imageAspectRatio <= 0) {
-        throw new Error('La relación de aspecto de la imagen no es válida.');
+  function calculateLayout(imageWidth, imageHeight, paperConfig, orientation, margin, spacing) {
+    if (!imageWidth || imageWidth <= 0 || !imageHeight || imageHeight <= 0) {
+        throw new Error('Las dimensiones de la imagen no son válidas.');
     }
-
-    const paper = paperConfig;
-    const pageWidth = orientation === 'landscape' ? paper.height : paper.width;
-    const pageHeight = orientation === 'landscape' ? paper.width : paper.height;
+    const pageWidth = orientation === 'landscape' ? paperConfig.height : paperConfig.width;
+    const pageHeight = orientation === 'landscape' ? paperConfig.width : paperConfig.height;
     const usableWidth = pageWidth - (margin * 2);
     const usableHeight = pageHeight - (margin * 2);
 
-    let bestLayout = {
-        imagesPerPage: 0,
-        imagesPerRow: 0,
-        imagesPerCol: 0,
-        imageWidth: 0,
-        imageHeight: 0,
+    if (imageWidth > usableWidth || imageHeight > usableHeight) {
+        return { imagesPerPage: 0, imagesPerRow: 0, imagesPerCol: 0 };
+    }
+    const imagesPerRow = Math.floor((usableWidth + spacing) / (imageWidth + spacing));
+    const imagesPerCol = Math.floor((usableHeight + spacing) / (imageHeight + spacing));
+    return {
+        imagesPerPage: imagesPerRow * imagesPerCol,
+        imagesPerRow,
+        imagesPerCol,
     };
+  }
 
-    // Estrategia 1: Ajustar al ancho y ver cuántas filas caben
-    for (let cols = 1; cols < 50; cols++) {
-        const totalSpacingX = (cols - 1) * spacing;
-        const imgWidth = (usableWidth - totalSpacingX) / cols;
-        if (imgWidth <= 0) break;
-
-        const imgHeight = imgWidth / imageAspectRatio;
-        const rows = Math.floor((usableHeight + spacing) / (imgHeight + spacing));
-        if (rows <= 0) continue;
-
-        const numImages = cols * rows;
-        if (numImages > bestLayout.imagesPerPage) {
-            bestLayout = {
-                imagesPerPage: numImages,
-                imagesPerRow: cols,
-                imagesPerCol: rows,
-                imageWidth: imgWidth,
-                imageHeight: imgHeight,
-            };
-        }
-    }
-
-    // Estrategia 2: Ajustar al alto y ver cuántas columnas caben
-    for (let rows = 1; rows < 50; rows++) {
-        const totalSpacingY = (rows - 1) * spacing;
-        const imgHeight = (usableHeight - totalSpacingY) / rows;
-        if (imgHeight <= 0) break;
-
-        const imgWidth = imgHeight * imageAspectRatio;
-        const cols = Math.floor((usableWidth + spacing) / (imgWidth + spacing));
-        if (cols <= 0) continue;
-
-        const numImages = cols * rows;
-        // Solo actualizar si es estrictamente mejor, para priorizar la primera estrategia
-        // en caso de empate (generalmente resulta en imágenes más grandes).
-        if (numImages > bestLayout.imagesPerPage) {
-            bestLayout = {
-                imagesPerPage: numImages,
-                imagesPerRow: cols,
-                imagesPerCol: rows,
-                imageWidth: imgWidth,
-                imageHeight: imgHeight,
-            };
-        }
-    }
-
-    return bestLayout;
-}
-
-
-// Función para generar el PDF (CORREGIDA)
-async function generatePDF() {
+  async function generatePDF() {
     if (!window.processedImages || window.processedImages.length === 0) {
-        console.error('No hay imágenes procesadas');
-        alert('Primero debes procesar las imágenes antes de generar un PDF.');
+        alert('Primero debes procesar las imágenes.');
+        return;
+    }
+    const unit = document.getElementById('outUnit').value;
+    if (unit !== 'mm') {
+        alert('Para generar un PDF, por favor establece las dimensiones de salida en milímetros (mm).');
+        return;
+    }
+    const imageWidth = parseFloat(document.getElementById('outWidth').value);
+    const imageHeight = parseFloat(document.getElementById('outHeight').value);
+
+    if (isNaN(imageWidth) || isNaN(imageHeight) || imageWidth <= 0 || imageHeight <= 0) {
+        alert('Por favor, introduce un ancho y alto válidos en mm.');
         return;
     }
 
@@ -370,77 +312,34 @@ async function generatePDF() {
     const margin = parseInt(document.getElementById('printMargin').value, 10);
     const spacing = parseInt(document.getElementById('printSpacing').value, 10);
     
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({
-        orientation: printLayout,
-        unit: 'mm',
-        format: paperSize, // Corregido: sin toUpperCase()
-    });
-
-    // Obtener la relación de aspecto de la primera imagen (todas son iguales)
-    const img = new Image();
-    await new Promise((resolve) => {
-        img.onload = resolve;
-        img.src = window.processedImages[0];
-    });
-    const imageAspectRatio = img.width / img.height;
-    
     const paperConfig = PAPER_SIZES[paperSize];
-    const layout = calculateLayout(imageAspectRatio, paperConfig, printLayout, margin, spacing);
+    const layout = calculateLayout(imageWidth, imageHeight, paperConfig, printLayout, margin, spacing);
 
     if (layout.imagesPerPage === 0) {
-        console.error("No se pudo colocar ninguna imagen en la página con la configuración actual.");
-        alert("No se pudo colocar ninguna imagen en la página con la configuración actual. Intenta reducir el margen o el espaciado.");
+        alert("Las imágenes con las dimensiones especificadas no caben en la página. Intenta con un tamaño de imagen más pequeño, o reduce los márgenes/espaciado.");
         return;
     }
 
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: printLayout, unit: 'mm', format: paperSize });
+
     for (let i = 0; i < window.processedImages.length; i++) {
-        // Calcular la posición en la página actual
         const imageOnPageIndex = i % layout.imagesPerPage;
         const col = imageOnPageIndex % layout.imagesPerRow;
         const row = Math.floor(imageOnPageIndex / layout.imagesPerRow);
         
-        // Agregar nueva página si es necesario
         if (i > 0 && imageOnPageIndex === 0) {
             doc.addPage();
         }
 
-        const x = margin + col * (layout.imageWidth + spacing);
-        const y = margin + row * (layout.imageHeight + spacing);
+        const x = margin + col * (imageWidth + spacing);
+        const y = margin + row * (imageHeight + spacing);
 
         const imgData = window.processedImages[i];
-        // El formato de imagen se asume como PNG por `toDataURL` en el procesamiento.
-        // Usar 'PNG' puede ser más robusto que 'JPEG'.
-        doc.addImage(imgData, 'PNG', x, y, layout.imageWidth, layout.imageHeight);
+        doc.addImage(imgData, 'PNG', x, y, imageWidth, imageHeight);
     }
-
     doc.save('golem_de_papel_impresion.pdf');
-}
+  }
 
-// Agregar event listener para el nuevo botón
-document.getElementById('printPdfBtn').addEventListener('click', generatePDF);
-
-// Actualizar el estado del botón de PDF cuando se procesen las imágenes
-function updatePrintButton() {
-    const printPdfBtn = document.getElementById('printPdfBtn');
-    const previewContainer = document.getElementById('previewContainer');
-    printPdfBtn.disabled = !previewContainer.hasChildNodes();
-}
-
-// Agregar la actualización del botón de PDF a la función existente de procesamiento
-async function processImages() {
-    // ... código existente de processImages ...
-    
-    updatePrintButton(); // Agregar esta línea al final de la función
-}
-  /*
-  // Botón de modo oscuro/claro
-  const toggleDark = document.getElementById('toggleDark');
-  toggleDark.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.contains('dark');
-    console.log('Estado actual:', isDark ? 'oscuro' : 'claro');
-    setDarkMode(!isDark);
-    console.log('Nuevo estado:', !isDark ? 'oscuro' : 'claro');
-  });
-  */
+  printPdfBtn.addEventListener('click', generatePDF);
 });

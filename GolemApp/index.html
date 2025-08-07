@@ -118,10 +118,14 @@
     <div class="output-controls max-w-xl mx-auto bg-stone-50 p-3 rounded mb-4 dark:bg-stone-800 dark:text-stone-100 dark:border dark:border-stone-700">
       <h3 class="text-lg font-semibold mb-2 tracking-tight">Opciones de Salida</h3>
       <div class="flex flex-wrap items-center gap-2 mb-2">
-        <label for="outWidth" class="dark:text-stone-300">Ancho final (px):</label>
-        <input type="number" id="outWidth" min="50" max="4096" value="800" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
-        <label for="outHeight" class="dark:text-stone-300">Alto final (px):</label>
-        <input type="number" id="outHeight" min="50" max="4096" value="600" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+        <label for="outWidth" class="dark:text-stone-300">Ancho final:</label>
+        <input type="number" id="outWidth" min="10" max="4096" value="800" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+        <label for="outHeight" class="dark:text-stone-300">Alto final:</label>
+        <input type="number" id="outHeight" min="10" max="4096" value="600" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+        <select id="outUnit" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+          <option value="px">px</option>
+          <option value="mm">mm</option>
+        </select>
       </div>
       <div class="flex flex-wrap items-center gap-2 mb-2">
         <label for="outFormat" class="dark:text-stone-300">Formato:</label>
