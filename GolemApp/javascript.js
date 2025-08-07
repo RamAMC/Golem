@@ -45,6 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const wmPreviewCanvas = document.getElementById('wmPreview');
   const wmControls = ['wmSize', 'wmColor', 'wmAlpha', 'wmFont', 'wmPos'];
 
+  // Elementos del layout del PDF
+  const pdfLayoutPreviewCanvas = document.getElementById('pdfLayoutPreview');
+  const pdfLayoutControls = ['paperSize', 'printLayout', 'printMargin', 'printSpacing', 'outWidth', 'outHeight', 'outUnit'];
+
+
   let images = [];
   window.processedImages = [];
 
@@ -55,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const w = wmPreviewCanvas.width;
     const h = wmPreviewCanvas.height;
 
-    // Fondo de la preview
     ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#44403c' : '#d6d3d1';
     ctx.fillRect(0, 0, w, h);
     ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#a8a29e' : '#78716c';
@@ -66,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!enableWm.checked) return;
 
-    // Aplicar marca de agua
     const numero = '1';
     const wmSize = parseInt(document.getElementById('wmSize').value, 10);
     const wmColor = document.getElementById('wmColor').value;
@@ -108,6 +111,82 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('wmAlpha').addEventListener('input', (e) => {
     document.getElementById('wmAlphaVal').textContent = e.target.value;
+  });
+
+  // --- Lógica de la Vista Previa del PDF ---
+
+  function updatePdfLayoutPreview() {
+    const ctx = pdfLayoutPreviewCanvas.getContext('2d');
+    const canvasW = pdfLayoutPreviewCanvas.width;
+    const canvasH = pdfLayoutPreviewCanvas.height;
+
+    const paper = PAPER_SIZES[document.getElementById('paperSize').value];
+    const orientation = document.getElementById('printLayout').value;
+    const paperW_mm = orientation === 'landscape' ? paper.height : paper.width;
+    const paperH_mm = orientation === 'landscape' ? paper.width : paper.height;
+
+    // Ajustar tamaño del canvas a la proporción del papel
+    pdfLayoutPreviewCanvas.height = canvasW * (paperH_mm / paperW_mm);
+
+    ctx.clearRect(0, 0, canvasW, pdfLayoutPreviewCanvas.height);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, canvasW, pdfLayoutPreviewCanvas.height);
+    ctx.strokeStyle = '#CCCCCC';
+    ctx.strokeRect(0, 0, canvasW, pdfLayoutPreviewCanvas.height);
+
+    const unit = document.getElementById('outUnit').value;
+    if (unit !== 'mm') {
+        ctx.fillStyle = '#888888';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Preview no disponible (usar mm)', canvasW / 2, pdfLayoutPreviewCanvas.height / 2);
+        return;
+    }
+
+    const imageWidth_mm = parseFloat(document.getElementById('outWidth').value);
+    const imageHeight_mm = parseFloat(document.getElementById('outHeight').value);
+    const margin_mm = parseInt(document.getElementById('printMargin').value, 10);
+    const spacing_mm = parseInt(document.getElementById('printSpacing').value, 10);
+
+    if (isNaN(imageWidth_mm) || isNaN(imageHeight_mm) || imageWidth_mm <= 0 || imageHeight_mm <= 0) {
+        return;
+    }
+
+    const layout = calculateLayout(imageWidth_mm, imageHeight_mm, paper, orientation, margin_mm, spacing_mm);
+    if (layout.imagesPerPage === 0) {
+        ctx.fillStyle = '#D35400';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Las imágenes no caben', canvasW / 2, pdfLayoutPreviewCanvas.height / 2);
+        return;
+    }
+
+    const scale = canvasW / paperW_mm;
+    const margin_px = margin_mm * scale;
+    const spacing_px = spacing_mm * scale;
+    const imgW_px = imageWidth_mm * scale;
+    const imgH_px = imageHeight_mm * scale;
+
+    ctx.fillStyle = '#A9CCE3';
+    ctx.strokeStyle = '#5499C7';
+    for (let i = 0; i < layout.imagesPerPage; i++) {
+        const col = i % layout.imagesPerRow;
+        const row = Math.floor(i / layout.imagesPerRow);
+        const x = margin_px + col * (imgW_px + spacing_px);
+        const y = margin_px + row * (imgH_px + spacing_px);
+        ctx.fillRect(x, y, imgW_px, imgH_px);
+        ctx.strokeRect(x, y, imgW_px, imgH_px);
+    }
+
+    ctx.fillStyle = '#17202A';
+    ctx.font = 'bold 12px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${layout.imagesPerPage} imágenes/página`, canvasW / 2, 15);
+  }
+
+  pdfLayoutControls.forEach(id => {
+      document.getElementById(id).addEventListener('input', updatePdfLayoutPreview);
+      document.getElementById(id).addEventListener('change', updatePdfLayoutPreview);
   });
 
   // --- Lógica Principal de la App ---
@@ -183,6 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('outWidth').value = width;
       document.getElementById('outHeight').value = height;
       document.getElementById('outUnit').value = 'px';
+      updatePdfLayoutPreview();
 
       for (let i = 0; i < croppedImages.length; i++) {
         const imgTop = croppedImages[i];
@@ -306,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (changed === 'height' && !isNaN(heightVal)) {
       outWidthInput.value = (heightVal * ratio).toFixed(1);
     }
+    updatePdfLayoutPreview();
   }
 
   document.getElementById('outWidth').addEventListener('input', () => updateLinkedDimensions('width'));
@@ -326,6 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
         outWidthInput.value = Math.round(widthVal * 37.8);
         outHeightInput.value = Math.round(heightVal * 37.8);
     }
+    updatePdfLayoutPreview();
   });
 
   const PAPER_SIZES = {
@@ -335,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function calculateLayout(imageWidth, imageHeight, paperConfig, orientation, margin, spacing) {
     if (!imageWidth || imageWidth <= 0 || !imageHeight || imageHeight <= 0) {
-        throw new Error('Las dimensiones de la imagen no son válidas.');
+        return { imagesPerPage: 0, imagesPerRow: 0, imagesPerCol: 0 };
     }
     const pageWidth = orientation === 'landscape' ? paperConfig.height : paperConfig.width;
     const pageHeight = orientation === 'landscape' ? paperConfig.width : paperConfig.height;
@@ -410,5 +492,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Inicializar estado de la UI
   updateWatermarkPreview();
+  updatePdfLayoutPreview();
   wmControlsContainer.style.display = enableWm.checked ? 'block' : 'none';
 });

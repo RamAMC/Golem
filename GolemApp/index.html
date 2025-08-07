@@ -154,31 +154,41 @@
       <!-- Agregar controles de impresión -->
       <div class="print-controls border-t dark:border-stone-700 mt-4 pt-4">
         <h4 class="text-base font-semibold mb-2 tracking-tight">Opciones de Impresión</h4>
-        <div class="flex flex-wrap items-center gap-4 mb-2">
-          <div class="flex items-center gap-2">
-            <label for="paperSize" class="dark:text-stone-300">Tamaño de papel:</label>
-            <select id="paperSize" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
-              <option value="a3">A3 (297×420 mm)</option>
-              <option value="a4">A4 (210×297 mm)</option>
-            </select>
-          </div>
-          <div class="flex items-center gap-2">
-            <label for="printLayout" class="dark:text-stone-300">Disposición:</label>
-            <select id="printLayout" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
-              <option value="portrait">Vertical</option>
-              <option value="landscape">Horizontal</option>
-            </select>
-          </div>
-        </div>
-        <div class="flex flex-wrap items-center gap-4 mb-2">
-          <div class="flex items-center gap-2">
-            <label for="printMargin" class="dark:text-stone-300">Margen (mm):</label>
-            <input type="number" id="printMargin" min="5" max="50" value="10" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
-          </div>
-          <div class="flex items-center gap-2">
-            <label for="printSpacing" class="dark:text-stone-300">Espacio entre imágenes (mm):</label>
-            <input type="number" id="printSpacing" min="0" max="50" value="5" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
-          </div>
+        <div class="flex flex-col md:flex-row gap-4">
+            <!-- Columna de Controles -->
+            <div class="flex-1 space-y-4">
+                <div class="flex flex-wrap items-center gap-4">
+                  <div class="flex items-center gap-2">
+                    <label for="paperSize" class="dark:text-stone-300">Tamaño de papel:</label>
+                    <select id="paperSize" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+                      <option value="a4">A4 (210×297 mm)</option>
+                      <option value="a3">A3 (297×420 mm)</option>
+                    </select>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <label for="printLayout" class="dark:text-stone-300">Disposición:</label>
+                    <select id="printLayout" class="border rounded px-2 py-1 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+                      <option value="portrait">Vertical</option>
+                      <option value="landscape">Horizontal</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                  <div class="flex items-center gap-2">
+                    <label for="printMargin" class="dark:text-stone-300">Margen (mm):</label>
+                    <input type="number" id="printMargin" min="5" max="50" value="10" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <label for="printSpacing" class="dark:text-stone-300">Espacio entre imágenes (mm):</label>
+                    <input type="number" id="printSpacing" min="0" max="50" value="5" class="border rounded px-2 py-1 w-20 dark:bg-stone-700 dark:border-stone-600 dark:text-stone-300">
+                  </div>
+                </div>
+            </div>
+            <!-- Columna de Preview -->
+            <div class="flex-shrink-0">
+                <label class="block text-sm font-medium dark:text-stone-300 mb-1">Vista Previa del Layout:</label>
+                <canvas id="pdfLayoutPreview" width="150" height="212" class="bg-white dark:bg-stone-200 rounded border border-stone-400 dark:border-stone-600"></canvas>
+            </div>
         </div>
       </div>
     </div>
