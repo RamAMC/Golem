@@ -1,288 +1,304 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Golem de Papel</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilos.css"> 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Roboto', 'system-ui', 'sans-serif']
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golem de Papel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilos.css"> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Roboto', 'system-ui', 'sans-serif']
+            }
           }
         }
       }
-    }
-  </script>
-</head>
-<body class="bg-stone-100 dark:bg-stone-950 min-h-screen font-sans">
-  <header class="flex flex-col items-center mt-8 mb-6 relative">
-    <!--<button id="toggleDark" class="absolute right-4 top-2 text-gray-500 hover:text-blue-700 dark:text-gray-300 dark:hover:text-yellow-300 text-lg transition">🌙/☀️</button>-->
-    <div class="absolute right-4 top-2">
-      <label class="relative inline-flex items-center gap-2">
-        <!-- Icono del sol -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500 dark:text-yellow-900" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd"/>
-        </svg>
-        
-        <!-- Switch -->
-        <div class="relative">
-          <input type="checkbox" id="toggleDark" class="sr-only peer">
-          <div class="w-11 h-6 bg-blue-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 dark:peer-checked:bg-orange-800 dark:bg-gray-700"></div>
-        </div>
-        
-        <!-- Icono de la luna -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-900 dark:text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
-        </svg>
-      </label>
-    </div>
-    <img src="golem_logo.png" alt="Logo Golem de Papel" class="w-28 h-28 rounded-full shadow mb-2 object-cover" id="logo-img" />
-    <a href="https://www.instagram.com/golemdepapel/" target="_blank" rel="noopener" class="flex items-center gap-2 text-blue-700 hover:text-pink-600 text-base font-medium dark:text-purple-400 dark:hover:text-orange-300">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5zm5.13.62a1.13 1.13 0 1 1-2.25 0a1.13 1.13 0 0 1 2.25 0z"/></svg>
-      @golemdepapel
-    </a>
-  </header>
-  <main class="container mx-auto max-w-5xl p-4 space-y-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Columna Principal de Controles -->
-        <div class="lg:col-span-2 space-y-8 order-2 lg:order-1">
-            <!-- PASO 1: Carga y Configuración -->
-            <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">1</div>
-                    <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Carga y Configuración</h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="fileInput" class="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">Sube tus imágenes:</label>
-                        <input type="file" id="fileInput" accept="image/*" multiple class="block w-full text-sm text-stone-700 dark:text-stone-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 dark:hover:file:bg-orange-900 dark:file:bg-orange-800 dark:file:text-stone-300" />
-                    </div>
-                    <div>
-                        <label for="aspectRatio" class="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
-                            Define la relación de aspecto:
-                            <span class="relative group">
-                                <span class="ml-1 text-xs text-blue-500 dark:text-orange-400 cursor-help">[?]</span>
-                                <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                                  Todas las imágenes se recortarán a esta proporción para mantener un formato consistente. El recorte se hace desde el centro.
-                                </span>
-                            </span>
-                        </label>
-                        <select id="aspectRatio" class="w-full border rounded-md px-3 py-2 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                            <option value="1:1">1:1 (Cuadrado)</option>
-                            <option value="4:3">4:3 (Clásico)</option>
-                            <option value="3:2">3:2 (Foto)</option>
-                            <option value="16:9">16:9 (Panorámico)</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="initialPreviewContainer" class="mt-6 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4">
-                    <!-- Previsualización de imágenes cargadas -->
-                </div>
-            </section>
-
-            <!-- PASO 2: Marca de Agua -->
-            <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
-                <div class="flex items-center gap-4 mb-4">
-                  <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">2</div>
-                  <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Marca de Agua</h2>
-                </div>
-
-                <div class="flex items-center mb-4">
-                  <input type="checkbox" id="enableWm" checked class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:bg-stone-700 dark:border-stone-600 dark:checked:bg-orange-600">
-                  <label for="enableWm" class="ml-3 text-stone-800 dark:text-stone-300">Habilitar secuencia numérica (Opcional)</label>
-                </div>
-
-                <div id="watermark-controls" class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4">
-                    <!-- Fila 1: Slider de Tamaño -->
-                    <div class="md:col-span-3 flex flex-wrap items-center gap-2">
-                        <label for="wmSize" class="dark:text-stone-300">Tamaño (% altura):</label>
-                        <input type="range" id="wmSize" min="5" max="20" value="8" class="dark:accent-orange-600 accent-blue-600 flex-1">
-                        <span id="wmSizeVal" class="w-4 text-right dark:text-stone-300">8</span><span class="dark:text-stone-300">%</span>
-                    </div>
-
-                    <!-- Vista Previa (ocupa 3 filas) -->
-                    <div class="md:col-start-4 md:row-start-1 md:row-span-3 flex items-center justify-center">
-                        <canvas id="wmPreview" width="150" height="150" class="bg-gray-200 dark:bg-stone-700/50 rounded-md shadow-inner mx-auto"></canvas>
-                    </div>
-
-                    <!-- Fila 2: Slider de Opacidad -->
-                    <div class="md:col-span-3 flex flex-wrap items-center gap-2">
-                        <label for="wmAlpha" class="dark:text-stone-300">Opacidad:</label>
-                        <input type="range" id="wmAlpha" min="10" max="100" value="70" class="dark:accent-orange-600 accent-blue-600 flex-1">
-                        <span id="wmAlphaVal" class="w-6 text-right dark:text-stone-300">70</span><span class="dark:text-stone-300">%</span>
-                    </div>
-
-                    <!-- Fila 3: Otros Controles -->
-                    <div class="md:col-span-3 flex flex-wrap items-center gap-4">
-                        <div class="flex items-center gap-2">
-                          <label for="wmColor" class="dark:text-stone-300">Color:</label>
-                          <input type="color" id="wmColor" value="#f7f304" class="w-8 h-8 p-0 border-0 rounded">
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <label for="wmFont" class="dark:text-stone-300">Fuente:</label>
-                            <select id="wmFont" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                              <option value="Arial">Arial</option>
-                              <option value="Verdana">Verdana</option>
-                              <option value="Courier New">Courier New</option>
-                              <option value="Times New Roman">Times New Roman</option>
-                            </select>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <label for="wmPos" class="dark:text-stone-300">Posición:</label>
-                            <select id="wmPos" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                              <option value="br">Inferior dcha.</option>
-                              <option value="bl">Inferior izq.</option>
-                              <option value="tr">Superior dcha.</option>
-                              <option value="tl">Superior izq.</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Columna Lateral de Ayuda -->
-        <aside class="lg:col-span-1 order-1 lg:order-2">
-            <div class="sticky top-8 bg-blue-50 border border-blue-200 rounded-lg p-6 dark:bg-stone-800/50 dark:border-stone-700">
-                <h2 class="text-xl font-semibold text-blue-800 mb-4 dark:text-orange-300 tracking-tight">¿Cómo funciona?</h2>
-                <ol class="list-decimal list-inside space-y-3 text-sm text-blue-900 dark:text-orange-200">
-                  <li><b>Sube tus imágenes:</b> Carga todas las imágenes que necesites. Se ordenarán automáticamente por nombre.</li>
-                  <li><b>Define el recorte:</b> Elige una relación de aspecto para asegurar que todas las imágenes tengan un formato consistente.</li>
-                  <li><b>Añade una secuencia (Opcional):</b> Activa la marca de agua para añadir un número a cada imagen. ¡Puedes personalizar su estilo y ver el resultado en la vista previa al instante!</li>
-                  <li><b>Procesa las imágenes:</b> Haz clic en "Procesar" para aplicar los cambios. Verás el resultado en la galería inferior.</li>
-                  <li><b>Configura la salida:</b>
-                      <ul class="list-disc list-inside ml-4 mt-1">
-                          <li><b>Para Descargar (ZIP):</b> Elige el formato (JPG, PNG) y el tamaño en <b>píxeles (px)</b>.</li>
-                          <li><b>Para Imprimir (PDF):</b> Elige el tamaño en <b>milímetros (mm)</b>.</li>
-                      </ul>
-                  </li>
-                  <li><b>Ajusta el PDF:</b> Elige el tamaño del papel, la orientación y los márgenes. La <b>vista previa del layout</b> te mostrará en tiempo real cuántas imágenes caben por hoja.</li>
-                  <li><b>Genera tus archivos:</b> Descarga las imágenes en un archivo ZIP o genera el PDF listo para imprimir.</li>
-                </ol>
-            </div>
-        </aside>
-    </div>
-
-    <!-- PASO 3: Procesar y Previsualizar -->
-    <section class="text-center">
-        <button id="processBtn" disabled class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg font-semibold dark:bg-orange-800 dark:hover:bg-orange-900">
-            <span class="flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M4 12a8 8 0 108-8"/></svg>
-                Procesar Imágenes
-            </span>
-        </button>
-    </section>
-
-    <!-- PASO 4: Resultados y Exportación -->
-    <div id="results-section" class="hidden opacity-0 transition-opacity duration-500 space-y-8">
-        <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">3</div>
-                <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Resultados</h2>
-            </div>
-            <div id="previewContainer" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 bg-stone-100 dark:bg-stone-800 p-4 rounded-md min-h-[150px] border dark:border-stone-700">
-                <!-- Las imágenes procesadas aparecerán aquí -->
-            </div>
-        </section>
-
-        <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">4</div>
-                <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Exportar</h2>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Columna para Descargar ZIP -->
-                <div class="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
-                    <h3 class="font-bold text-lg text-blue-700 dark:text-orange-400">Descargar como ZIP</h3>
-                    <div class="flex items-center gap-2">
-                        <label for="outFormat" class="dark:text-stone-300">Formato:</label>
-                        <select id="outFormat" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                          <option value="png">PNG</option>
-                          <option value="jpeg">JPG</option>
-                          <option value="webp">WebP</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <label for="outWidth" class="dark:text-stone-300">Tamaño (px):</label>
-                        <input type="number" id="outWidth" min="10" max="4096" value="800" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                        <input type="number" id="outHeight" min="10" max="4096" value="600" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+    </script>
+  </head>
+  <body class="bg-stone-100 dark:bg-stone-950 min-h-screen font-sans">
+    <header class="flex flex-col items-center mt-8 mb-6 relative">
+      <!--<button id="toggleDark" class="absolute right-4 top-2 text-gray-500 hover:text-blue-700 dark:text-gray-300 dark:hover:text-yellow-300 text-lg transition">🌙/☀️</button>-->
+      <div class="absolute right-4 top-2">
+        <label class="relative inline-flex items-center gap-2">
+          <!-- Icono del sol -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500 dark:text-yellow-900" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd"/>
+          </svg>
+          
+          <!-- Switch -->
+          <div class="relative">
+            <input type="checkbox" id="toggleDark" class="sr-only peer">
+            <div class="w-11 h-6 bg-blue-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 dark:peer-checked:bg-orange-800 dark:bg-gray-700"></div>
+          </div>
+          
+          <!-- Icono de la luna -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-900 dark:text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+        </label>
+      </div>
+      <img src="golem_logo.png" alt="Logo Golem de Papel" class="w-28 h-28 rounded-full shadow mb-2 object-cover" id="logo-img" />
+      <a href="https://www.instagram.com/golemdepapel/" target="_blank" rel="noopener" class="flex items-center gap-2 text-blue-700 hover:text-pink-600 text-base font-medium dark:text-purple-400 dark:hover:text-orange-300">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5zm5.13.62a1.13 1.13 0 1 1-2.25 0a1.13 1.13 0 0 1 2.25 0z"/></svg>
+        @golemdepapel
+      </a>
+    </header>
+    <main class="container mx-auto max-w-5xl p-4 space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Columna Principal de Controles -->
+          <div class="lg:col-span-2 space-y-8 order-2 lg:order-1">
+              <!-- PASO 1: Carga y Configuración -->
+              <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
+                  <div class="flex items-center gap-4 mb-4">
+                      <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">1</div>
+                      <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Carga y Configuración</h2>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                          <label for="fileInput" class="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">Sube tus imágenes:</label>
+                          <input type="file" id="fileInput" accept="image/*" multiple class="block w-full text-sm text-stone-700 dark:text-stone-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 dark:hover:file:bg-orange-900 dark:file:bg-orange-800 dark:file:text-stone-300" />
                       </div>
-                    <div class="pt-4">
-                        <button id="downloadBtn" disabled class="w-full bg-green-600 text-white px-6 py-2 rounded-md shadow hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-purple-800 dark:hover:bg-purple-900">Descargar ZIP</button>
-                    </div>
+                      <div>
+                          <label for="aspectRatio" class="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
+                              Define la relación de aspecto:
+                              <span class="relative group">
+                                  <span class="ml-1 text-xs text-blue-500 dark:text-orange-400 cursor-help">[?]</span>
+                                  <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                    Todas las imágenes se recortarán a esta proporción para mantener un formato consistente. El recorte se hace desde el centro.
+                                  </span>
+                              </span>
+                          </label>
+                          <select id="aspectRatio" class="w-full border rounded-md px-3 py-2 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                              <option value="1:1">1:1 (Cuadrado)</option>
+                              <option value="4:3">4:3 (Clásico)</option>
+                              <option value="3:2">3:2 (Foto)</option>
+                              <option value="16:9">16:9 (Panorámico)</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div id="initialPreviewContainer" class="mt-6 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4">
+                      <!-- Previsualización de imágenes cargadas -->
+                  </div>
+              </section>
+
+              <!-- PASO 2: Marca de Agua -->
+              <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">2</div>
+                    <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Marca de Agua</h2>
+                  </div>
+
+                  <div class="flex items-center mb-4">
+                    <input type="checkbox" id="enableWm" checked class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:bg-stone-700 dark:border-stone-600 dark:checked:bg-orange-600">
+                    <label for="enableWm" class="ml-3 text-stone-800 dark:text-stone-300">Habilitar secuencia numérica (Opcional)</label>
+                  </div>
+
+          <!-- Contenedor flexible que cambia layout en md -->
+            <div class="flex flex-col md:flex-row md:items-start md:gap-6">
+
+              <!-- Controles -->
+              <div id="watermark-controls" class="flex flex-col gap-4 flex-1">
+
+                <!-- Tamaño -->
+                <div class="flex items-center gap-2">
+                  <label for="wmSize" class="dark:text-stone-300">Tamaño (% altura):</label>
+                  <input type="range" id="wmSize" min="5" max="20" value="8"
+                    class="dark:accent-orange-600 accent-blue-600 flex-1" />
+                  <span id="wmSizeVal" class="w-4 text-right dark:text-stone-300">8</span><span
+                    class="dark:text-stone-300">%</span>
                 </div>
 
-                <!-- Columna para Generar PDF -->
-                <div class="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
-                    <h3 class="font-bold text-lg text-blue-700 dark:text-orange-400">Generar PDF para Imprimir</h3>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <label for="outWidthMm" class="dark:text-stone-300">Tamaño (mm):</label>
-                        <input type="number" id="outWidthMm" step="0.1" min="5" max="500" value="80" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                        <input type="number" id="outHeightMm" step="0.1" min="5" max="500" value="60" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                    </div>
-                    <div class="print-controls">
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <div class="flex-1 space-y-4">
-                                <div class="flex flex-wrap items-center gap-4">
-                                  <div class="flex items-center gap-2">
-                                    <label for="paperSize" class="dark:text-stone-300">Papel:</label>
-                                    <select id="paperSize" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                                      <option value="a4">A4</option>
-                                      <option value="a3">A3</option>
-                                    </select>
-                                  </div>
-                                  <div class="flex items-center gap-2">
-                                    <label for="printLayout" class="dark:text-stone-300">Disposición:</label>
-                                    <select id="printLayout" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                                      <option value="portrait">Vertical</option>
-                                      <option value="landscape">Horizontal</option>
-                                    </select>
-                                  </div>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-4">
-                                  <div class="flex items-center gap-2">
-                                    <label for="printMargin" class="dark:text-stone-300">Margen (mm):</label>
-                                    <input type="number" id="printMargin" min="0" max="50" value="10" class="border rounded-md px-2 py-1 w-20 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                                  </div>
-                                  <div class="flex items-center gap-2">
-                                    <label for="printSpacing" class="dark:text-stone-300">
-                                        Espacio (mm):
-                                        <span class="relative group">
-                                            <span class="ml-1 text-xs text-blue-500 dark:text-orange-400 cursor-help">[?]</span>
-                                            <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                                              Define el espacio en milímetros que habrá entre cada imagen en la hoja del PDF.
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <input type="number" id="printSpacing" min="0" max="50" value="5" class="border rounded-md px-2 py-1 w-20 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                                  </div>
-                                </div>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <canvas id="pdfLayoutPreview" width="120" height="170" class="bg-white dark:bg-stone-200 rounded-md border border-stone-400 dark:border-stone-600"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pt-4">
-                       <button id="printPdfBtn" disabled class="w-full bg-orange-600 text-white px-6 py-2 rounded-md shadow hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-red-800 dark:hover:bg-red-900">Generar PDF</button>
-                    </div>
+                <!-- Opacidad -->
+                <div class="flex items-center gap-2">
+                  <label for="wmAlpha" class="dark:text-stone-300">Opacidad:</label>
+                  <input type="range" id="wmAlpha" min="10" max="100" value="70"
+                    class="dark:accent-orange-600 accent-blue-600 flex-1" />
+                  <span id="wmAlphaVal" class="w-6 text-right dark:text-stone-300">70</span><span
+                    class="dark:text-stone-300">%</span>
                 </div>
+
+                <!-- Otros controles -->
+                <div class="flex flex-wrap gap-4">
+                  <div class="flex items-center gap-2">
+                    <label for="wmColor" class="dark:text-stone-300">Color:</label>
+                    <input type="color" id="wmColor" value="#f7f304" class="w-8 h-8 p-0 border-0 rounded" />
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <label for="wmFont" class="dark:text-stone-300">Fuente:</label>
+                    <select id="wmFont"
+                      class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                      <option value="Arial">Arial</option>
+                      <option value="Verdana">Verdana</option>
+                      <option value="Courier New">Courier New</option>
+                      <option value="Times New Roman">Times New Roman</option>
+                    </select>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <label for="wmPos" class="dark:text-stone-300">Posición:</label>
+                    <select id="wmPos"
+                      class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                      <option value="br">Inferior dcha.</option>
+                      <option value="bl">Inferior izq.</option>
+                      <option value="tr">Superior dcha.</option>
+                      <option value="tl">Superior izq.</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Canvas de vista previa -->
+              <div class="flex justify-center md:justify-end flex-shrink-0 mt-6 md:mt-0">
+                <canvas id="wmPreview" width="150" height="150"
+                  class="bg-gray-200 rounded-md shadow-inner"></canvas>
+              </div>
             </div>
-        </section>
-    </div>
-  </main>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="javascript.js"></script>
-</body>
-</html>
+
+
+
+                </section>
+                </div>
+
+          <!-- Columna Lateral de Ayuda -->
+          <aside class="lg:col-span-1 order-1 lg:order-2">
+              <div class="sticky top-8 bg-blue-50 border border-blue-200 rounded-lg p-6 dark:bg-stone-800/50 dark:border-stone-700">
+                  <h2 class="text-xl font-semibold text-blue-800 mb-4 dark:text-orange-300 tracking-tight">¿Cómo funciona?</h2>
+                  <ol class="list-decimal list-inside space-y-3 text-sm text-blue-900 dark:text-orange-200">
+                    <li><b>Sube tus imágenes:</b> Carga todas las imágenes que necesites. Se ordenarán automáticamente por nombre.</li>
+                    <li><b>Define el recorte:</b> Elige una relación de aspecto para asegurar que todas las imágenes tengan un formato consistente.</li>
+                    <li><b>Añade una secuencia (Opcional):</b> Activa la marca de agua para añadir un número a cada imagen. ¡Puedes personalizar su estilo y ver el resultado en la vista previa al instante!</li>
+                    <li><b>Procesa las imágenes:</b> Haz clic en "Procesar" para aplicar los cambios. Verás el resultado en la galería inferior.</li>
+                    <li><b>Configura la salida:</b>
+                        <ul class="list-disc list-inside ml-4 mt-1">
+                            <li><b>Para Descargar (ZIP):</b> Elige el formato (JPG, PNG) y el tamaño en <b>píxeles (px)</b>.</li>
+                            <li><b>Para Imprimir (PDF):</b> Elige el tamaño en <b>milímetros (mm)</b>.</li>
+                        </ul>
+                    </li>
+                    <li><b>Ajusta el PDF:</b> Elige el tamaño del papel, la orientación y los márgenes. La <b>vista previa del layout</b> te mostrará en tiempo real cuántas imágenes caben por hoja.</li>
+                    <li><b>Genera tus archivos:</b> Descarga las imágenes en un archivo ZIP o genera el PDF listo para imprimir.</li>
+                  </ol>
+              </div>
+          </aside>
+      </div>
+
+      <!-- PASO 3: Procesar y Previsualizar -->
+      <section class="text-center">
+          <button id="processBtn" disabled class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg font-semibold dark:bg-orange-800 dark:hover:bg-orange-900">
+              <span class="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M4 12a8 8 0 108-8"/></svg>
+                  Procesar Imágenes
+              </span>
+          </button>
+      </section>
+
+      <!-- PASO 4: Resultados y Exportación -->
+      <div id="results-section" class="hidden opacity-0 transition-opacity duration-500 space-y-8">
+          <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
+              <div class="flex items-center gap-4 mb-4">
+                  <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">3</div>
+                  <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Resultados</h2>
+              </div>
+              <div id="previewContainer" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 bg-stone-100 dark:bg-stone-800 p-4 rounded-md min-h-[150px] border dark:border-stone-700">
+                  <!-- Las imágenes procesadas aparecerán aquí -->
+              </div>
+          </section>
+
+          <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
+              <div class="flex items-center gap-4 mb-4">
+                  <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">4</div>
+                  <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Exportar</h2>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <!-- Columna para Descargar ZIP -->
+                  <div class="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
+                      <h3 class="font-bold text-lg text-blue-700 dark:text-orange-400">Descargar como ZIP</h3>
+                      <div class="flex items-center gap-2">
+                          <label for="outFormat" class="dark:text-stone-300">Formato:</label>
+                          <select id="outFormat" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                            <option value="png">PNG</option>
+                            <option value="jpeg">JPG</option>
+                            <option value="webp">WebP</option>
+                          </select>
+                      </div>
+                      <div class="flex flex-wrap items-center gap-2">
+                          <label for="outWidth" class="dark:text-stone-300">Tamaño (px):</label>
+                          <input type="number" id="outWidth" min="10" max="4096" value="800" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                          <input type="number" id="outHeight" min="10" max="4096" value="600" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                        </div>
+                      <div class="pt-4">
+                          <button id="downloadBtn" disabled class="w-full bg-green-600 text-white px-6 py-2 rounded-md shadow hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-purple-800 dark:hover:bg-purple-900">Descargar ZIP</button>
+                      </div>
+                  </div>
+
+                  <!-- Columna para Generar PDF -->
+                  <div class="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
+                      <h3 class="font-bold text-lg text-blue-700 dark:text-orange-400">Generar PDF para Imprimir</h3>
+                      <div class="flex flex-wrap items-center gap-2">
+                          <label for="outWidthMm" class="dark:text-stone-300">Tamaño (mm):</label>
+                          <input type="number" id="outWidthMm" step="0.1" min="5" max="500" value="80" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                          <input type="number" id="outHeightMm" step="0.1" min="5" max="500" value="60" class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                      </div>
+                      <div class="print-controls">
+                          <div class="flex flex-col md:flex-row gap-4">
+                              <div class="flex-1 space-y-4">
+                                  <div class="flex flex-wrap items-center gap-4">
+                                    <div class="flex items-center gap-2">
+                                      <label for="paperSize" class="dark:text-stone-300">Papel:</label>
+                                      <select id="paperSize" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                                        <option value="a4">A4</option>
+                                        <option value="a3">A3</option>
+                                      </select>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                      <label for="printLayout" class="dark:text-stone-300">Disposición:</label>
+                                      <select id="printLayout" class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                                        <option value="portrait">Vertical</option>
+                                        <option value="landscape">Horizontal</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="flex flex-wrap items-center gap-4">
+                                    <div class="flex items-center gap-2">
+                                      <label for="printMargin" class="dark:text-stone-300">Margen (mm):</label>
+                                      <input type="number" id="printMargin" min="0" max="50" value="10" class="border rounded-md px-2 py-1 w-20 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                      <label for="printSpacing" class="dark:text-stone-300">
+                                          Espacio (mm):
+                                          <span class="relative group">
+                                              <span class="ml-1 text-xs text-blue-500 dark:text-orange-400 cursor-help">[?]</span>
+                                              <span class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                                Define el espacio en milímetros que habrá entre cada imagen en la hoja del PDF.
+                                              </span>
+                                          </span>
+                                      </label>
+                                      <input type="number" id="printSpacing" min="0" max="50" value="5" class="border rounded-md px-2 py-1 w-20 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="flex-shrink-0">
+                                  <canvas id="pdfLayoutPreview" width="120" height="170" class="bg-white dark:bg-stone-200 rounded-md border border-stone-400 dark:border-stone-600"></canvas>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="pt-4">
+                        <button id="printPdfBtn" disabled class="w-full bg-orange-600 text-white px-6 py-2 rounded-md shadow hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-red-800 dark:hover:bg-red-900">Generar PDF</button>
+                      </div>
+                  </div>
+              </div>
+          </section>
+      </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="javascript.js"></script>
+  </body>
+  </html>
