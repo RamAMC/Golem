@@ -54,9 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Estado de la Aplicación ---
     let images = [];
     window.processedImages = [];
-    let croppedCanvases = [];
-
-    // --- Constantes ---
 
     // --- Lógica de la Interfaz (UI) ---
 
@@ -101,36 +98,88 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.restore();
     }
 
-    function updateLinkedDimensions(source) {
+    function updateLinkedDimensions() {
         const aspectValue = aspectRatioSelect.value;
         const [aspectW, aspectH] = aspectValue.split(':').map(Number);
         const ratio = aspectW / aspectH;
-
-        if (source === 'px') {
-            const widthVal = parseFloat(outWidthInput.value);
-            if (!isNaN(widthVal)) outHeightInput.value = Math.round(widthVal / ratio);
-        }
+        const widthVal = parseFloat(outWidthInput.value);
+        if (!isNaN(widthVal)) outHeightInput.value = Math.round(widthVal / ratio);
     }
 
-    // --- Lógica de Negocio ---
+    // --- Event Listeners ---
+    fileInput.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
 
-    function redrawFinalPreview() {
+        files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+        images = [];
+        initialPreviewContainer.innerHTML = '';
+
+        files.forEach((file) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = file.name;
+            img.className = 'w-full h-full object-cover rounded-md';
+            initialPreviewContainer.appendChild(img);
+            images.push({ file, src: e.target.result, name: file.name });
+            if (images.length === files.length) {
+              processBtn.disabled = false;
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+    });
+
+    processBtn.addEventListener('click', () => {
+        if (images.length === 0) return;
+
         const processedImages = [];
         previewContainer.innerHTML = '';
+        const targetAspect = (() => {
+            const [w, h] = aspectRatioSelect.value.split(':').map(Number);
+            return w / h;
+        })();
 
-        if (croppedCanvases.length === 0) {
-            window.processedImages = [];
-            downloadBtn.disabled = true;
-            return;
-        }
+        const imgElements = images.map(imgObj => {
+          const img = new window.Image();
+          img.src = imgObj.src;
+          return img;
+        });
 
-        const width = croppedCanvases[0].width;
-        const height = croppedCanvases[0].height;
-        const halfHeight = Math.floor(height / 2);
+        Promise.all(imgElements.map(img => new Promise(res => { if(img.complete) res(); else img.onload = res; }))).then(() => {
+          let minWidth = Math.min(...imgElements.map(img => img.naturalWidth));
+          let minHeight = Math.min(...imgElements.map(img => img.naturalHeight));
 
-        for (let i = 0; i < croppedCanvases.length; i++) {
-            const imgTop = croppedCanvases[i];
-            const imgBottom = croppedCanvases[(i + 1) % croppedCanvases.length];
+          let cropWidth = minWidth;
+          let cropHeight = Math.round(cropWidth / targetAspect);
+          if (cropHeight > minHeight) {
+            cropHeight = minHeight;
+            cropWidth = Math.round(cropHeight * targetAspect);
+          }
+
+          const croppedImages = imgElements.map(img => {
+            const sx = Math.floor((img.naturalWidth - cropWidth) / 2);
+            const sy = Math.floor((img.naturalHeight - cropHeight) / 2);
+            const canvas = document.createElement('canvas');
+            canvas.width = cropWidth;
+            canvas.height = cropHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, sx, sy, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+            return canvas;
+          });
+
+          const width = cropWidth;
+          const height = cropHeight;
+          const halfHeight = Math.floor(height / 2);
+
+          outWidthInput.value = width;
+          outHeightInput.value = height;
+
+          for (let i = 0; i < croppedImages.length; i++) {
+            const imgTop = croppedImages[i];
+            const imgBottom = croppedImages[(i + 1) % croppedImages.length];
             const canvas = document.createElement('canvas');
             canvas.width = width;
             canvas.height = height;
@@ -174,80 +223,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             previewContainer.appendChild(resultImg);
             processedImages.push(canvas.toDataURL('image/png'));
-        }
-
-        window.processedImages = processedImages;
-        downloadBtn.disabled = false;
-    }
-
-    // --- Event Listeners ---
-    fileInput.addEventListener('change', (event) => {
-        const files = Array.from(event.target.files);
-        if (files.length === 0) return;
-
-        files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
-        images = [];
-        initialPreviewContainer.innerHTML = '';
-
-        files.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.alt = file.name;
-            img.className = 'w-full h-full object-cover rounded-md';
-            initialPreviewContainer.appendChild(img);
-            images.push({ file, src: e.target.result, name: file.name });
-            if (images.length === files.length) {
-              processBtn.disabled = false;
-            }
-          };
-          reader.readAsDataURL(file);
-        });
-    });
-
-    processBtn.addEventListener('click', () => {
-        if (images.length === 0) return;
-
-        previewContainer.innerHTML = '';
-        const targetAspect = (() => {
-            const [w, h] = aspectRatioSelect.value.split(':').map(Number);
-            return w / h;
-        })();
-
-        const imgElements = images.map(imgObj => {
-          const img = new window.Image();
-          img.src = imgObj.src;
-          return img;
-        });
-
-        Promise.all(imgElements.map(img => new Promise(res => { if(img.complete) res(); else img.onload = res; }))).then(() => {
-          let minWidth = Math.min(...imgElements.map(img => img.naturalWidth));
-          let minHeight = Math.min(...imgElements.map(img => img.naturalHeight));
-
-          let cropWidth = minWidth;
-          let cropHeight = Math.round(cropWidth / targetAspect);
-          if (cropHeight > minHeight) {
-            cropHeight = minHeight;
-            cropWidth = Math.round(cropHeight * targetAspect);
           }
 
-          croppedCanvases = imgElements.map(img => {
-            const sx = Math.floor((img.naturalWidth - cropWidth) / 2);
-            const sy = Math.floor((img.naturalHeight - cropHeight) / 2);
-            const canvas = document.createElement('canvas');
-            canvas.width = cropWidth;
-            canvas.height = cropHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, sx, sy, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
-            return canvas;
-          });
-
-          outWidthInput.value = cropWidth;
-          outHeightInput.value = cropHeight;
-
-          redrawFinalPreview();
-
+          window.processedImages = processedImages;
+          downloadBtn.disabled = false;
           resultsSection.classList.remove('hidden');
           setTimeout(() => resultsSection.classList.remove('opacity-0'), 10);
         });
@@ -302,11 +281,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     enableWm.addEventListener('change', () => {
-        wmControlsContainer.style.display = enableWm.checked ? 'block' : 'none';
-        updateWatermarkPreview();
-        if (croppedCanvases.length > 0) {
-            redrawFinalPreview();
+        const checked = enableWm.checked;
+        const controlsContainer = document.getElementById('watermark-controls');
+        if (controlsContainer) {
+            controlsContainer.style.display = checked ? 'grid' : 'none';
         }
+        wmPreviewCanvas.style.display = checked ? 'block' : 'none';
+        updateWatermarkPreview();
     });
     wmControls.forEach(id => {
         document.getElementById(id).addEventListener('input', updateWatermarkPreview);
@@ -319,14 +300,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('wmAlphaVal').textContent = e.target.value;
     });
 
-    outWidthInput.addEventListener('input', () => updateLinkedDimensions('px'));
+    outWidthInput.addEventListener('input', () => updateLinkedDimensions());
     outHeightInput.addEventListener('input', () => { /* no-op to prevent loops */ });
-
-    aspectRatioSelect.addEventListener('change', () => {
-        updateLinkedDimensions('px');
-    });
+    aspectRatioSelect.addEventListener('change', () => updateLinkedDimensions());
 
     // --- Inicialización ---
     updateWatermarkPreview();
-    wmControlsContainer.style.display = enableWm.checked ? 'block' : 'none';
+    const isWmEnabled = enableWm.checked;
+    wmControlsContainer.style.display = isWmEnabled ? 'grid' : 'none';
+    wmPreviewCanvas.style.display = isWmEnabled ? 'block' : 'none';
 });
