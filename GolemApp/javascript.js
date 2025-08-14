@@ -228,7 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
           window.processedImages = processedImages;
           downloadBtn.disabled = false;
           resultsSection.classList.remove('hidden');
-          setTimeout(() => resultsSection.classList.remove('opacity-0'), 10);
+          setTimeout(() => {
+            resultsSection.classList.remove('opacity-0');
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+          }, 10);
         });
     });
 
