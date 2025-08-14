@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsSection = document.getElementById('results-section');
     const previewContainer = document.getElementById('previewContainer');
     const downloadBtn = document.getElementById('downloadBtn');
-    const printPdfBtn = document.getElementById('printPdfBtn');
 
     // Marca de Agua
     const enableWm = document.getElementById('enableWm');
@@ -52,21 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const outWidthInput = document.getElementById('outWidth');
     const outHeightInput = document.getElementById('outHeight');
 
-    // Salida PDF
-    const outWidthMmInput = document.getElementById('outWidthMm');
-    const outHeightMmInput = document.getElementById('outHeightMm');
-    const pdfLayoutPreviewCanvas = document.getElementById('pdfLayoutPreview');
-    const pdfLayoutControls = ['paperSize', 'printLayout', 'printMargin', 'printSpacing', 'outWidthMm', 'outHeightMm'];
-
     // --- Estado de la Aplicación ---
     let images = [];
     window.processedImages = [];
-
-    // --- Constantes ---
-    const PAPER_SIZES = {
-        a4: { width: 210, height: 297 },
-        a3: { width: 297, height: 420 }
-    };
 
     // --- Lógica de la Interfaz (UI) ---
 
@@ -111,145 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.restore();
     }
 
-    function updatePdfLayoutPreview() {
-        const ctx = pdfLayoutPreviewCanvas.getContext('2d');
-        const canvasW = pdfLayoutPreviewCanvas.width;
-
-        const paper = PAPER_SIZES[document.getElementById('paperSize').value];
-        const orientation = document.getElementById('printLayout').value;
-        const paperW_mm = orientation === 'landscape' ? paper.height : paper.width;
-        const paperH_mm = orientation === 'landscape' ? paper.width : paper.height;
-
-        pdfLayoutPreviewCanvas.height = canvasW * (paperH_mm / paperW_mm);
-        ctx.clearRect(0, 0, canvasW, pdfLayoutPreviewCanvas.height);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvasW, pdfLayoutPreviewCanvas.height);
-        ctx.strokeStyle = '#CCCCCC';
-        ctx.strokeRect(0, 0, canvasW, pdfLayoutPreviewCanvas.height);
-
-        const imageWidth_mm = parseFloat(outWidthMmInput.value);
-        const imageHeight_mm = parseFloat(outHeightMmInput.value);
-
-        if (isNaN(imageWidth_mm) || isNaN(imageHeight_mm) || imageWidth_mm <= 0 || imageHeight_mm <= 0) {
-            return;
-        }
-
-        const margin_mm = parseInt(document.getElementById('printMargin').value, 10);
-        const spacing_mm = parseInt(document.getElementById('printSpacing').value, 10);
-        const layout = calculateLayout(imageWidth_mm, imageHeight_mm, paper, orientation, margin_mm, spacing_mm);
-
-        if (layout.imagesPerPage === 0) {
-            ctx.fillStyle = '#D35400';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('No caben', canvasW / 2, pdfLayoutPreviewCanvas.height / 2);
-            return;
-        }
-
-        const scale = canvasW / paperW_mm;
-        const margin_px = margin_mm * scale;
-        const spacing_px = spacing_mm * scale;
-        const imgW_px = imageWidth_mm * scale;
-        const imgH_px = imageHeight_mm * scale;
-
-        ctx.fillStyle = '#A9CCE3';
-        ctx.strokeStyle = '#5499C7';
-        for (let i = 0; i < layout.imagesPerPage; i++) {
-            const col = i % layout.imagesPerRow;
-            const row = Math.floor(i / layout.imagesPerRow);
-            const x = margin_px + col * (imgW_px + spacing_px);
-            const y = margin_px + row * (imgH_px + spacing_px);
-            ctx.fillRect(x, y, imgW_px, imgH_px);
-            ctx.strokeRect(x, y, imgW_px, imgH_px);
-        }
-
-        ctx.fillStyle = '#17202A';
-        ctx.font = 'bold 12px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(`${layout.imagesPerPage} img/pág`, canvasW / 2, 15);
-    }
-
-    function updateLinkedDimensions(source) {
+    function updateLinkedDimensions() {
         const aspectValue = aspectRatioSelect.value;
         const [aspectW, aspectH] = aspectValue.split(':').map(Number);
         const ratio = aspectW / aspectH;
-
-        if (source === 'px') {
-            const widthVal = parseFloat(outWidthInput.value);
-            if (!isNaN(widthVal)) outHeightInput.value = Math.round(widthVal / ratio);
-        } else if (source === 'mm') {
-            const widthVal = parseFloat(outWidthMmInput.value);
-            if (!isNaN(widthVal)) outHeightMmInput.value = (widthVal / ratio).toFixed(1);
-        }
-    }
-
-    // --- Lógica de Negocio ---
-
-    function calculateLayout(imageWidth, imageHeight, paperConfig, orientation, margin, spacing) {
-        if (!imageWidth || imageWidth <= 0 || !imageHeight || imageHeight <= 0) {
-            return { imagesPerPage: 0, imagesPerRow: 0, imagesPerCol: 0 };
-        }
-        const pageWidth = orientation === 'landscape' ? paperConfig.height : paperConfig.width;
-        const pageHeight = orientation === 'landscape' ? paperConfig.width : paperConfig.height;
-        const usableWidth = pageWidth - (margin * 2);
-        const usableHeight = pageHeight - (margin * 2);
-
-        if (imageWidth > usableWidth || imageHeight > usableHeight) {
-            return { imagesPerPage: 0, imagesPerRow: 0, imagesPerCol: 0 };
-        }
-        const imagesPerRow = Math.floor((usableWidth + spacing) / (imageWidth + spacing));
-        const imagesPerCol = Math.floor((usableHeight + spacing) / (imageHeight + spacing));
-        return {
-            imagesPerPage: imagesPerRow * imagesPerCol,
-            imagesPerRow,
-            imagesPerCol,
-        };
-    }
-
-    async function generatePDF() {
-        if (!window.processedImages || window.processedImages.length === 0) {
-            alert('Primero debes procesar las imágenes.');
-            return;
-        }
-
-        const imageWidth = parseFloat(outWidthMmInput.value);
-        const imageHeight = parseFloat(outHeightMmInput.value);
-
-        if (isNaN(imageWidth) || isNaN(imageHeight) || imageWidth <= 0 || imageHeight <= 0) {
-            alert('Por favor, introduce un ancho y alto válidos en mm para el PDF.');
-            return;
-        }
-
-        const paperSize = document.getElementById('paperSize').value;
-        const printLayout = document.getElementById('printLayout').value;
-        const margin = parseInt(document.getElementById('printMargin').value, 10);
-        const spacing = parseInt(document.getElementById('printSpacing').value, 10);
-
-        const paperConfig = PAPER_SIZES[paperSize];
-        const layout = calculateLayout(imageWidth, imageHeight, paperConfig, printLayout, margin, spacing);
-
-        if (layout.imagesPerPage === 0) {
-            alert("Las imágenes con las dimensiones especificadas no caben en la página. Intenta con un tamaño de imagen más pequeño, o reduce los márgenes/espaciado.");
-            return;
-        }
-
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: printLayout, unit: 'mm', format: paperSize });
-
-        for (let i = 0; i < window.processedImages.length; i++) {
-            const imageOnPageIndex = i % layout.imagesPerPage;
-            const col = imageOnPageIndex % layout.imagesPerRow;
-            const row = Math.floor(imageOnPageIndex / layout.imagesPerRow);
-
-            if (i > 0 && imageOnPageIndex === 0) doc.addPage();
-
-            const x = margin + col * (imageWidth + spacing);
-            const y = margin + row * (imageHeight + spacing);
-
-            const imgData = window.processedImages[i];
-            doc.addImage(imgData, 'PNG', x, y, imageWidth, imageHeight);
-        }
-        doc.save('golem_de_papel_impresion.pdf');
+        const widthVal = parseFloat(outWidthInput.value);
+        if (!isNaN(widthVal)) outHeightInput.value = Math.round(widthVal / ratio);
     }
 
     // --- Event Listeners ---
@@ -322,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           outWidthInput.value = width;
           outHeightInput.value = height;
-          updateLinkedDimensions('mm'); // Actualizar mm por si acaso
 
           for (let i = 0; i < croppedImages.length; i++) {
             const imgTop = croppedImages[i];
@@ -374,7 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           window.processedImages = processedImages;
           downloadBtn.disabled = false;
-          printPdfBtn.disabled = false;
           resultsSection.classList.remove('hidden');
           setTimeout(() => resultsSection.classList.remove('opacity-0'), 10);
         });
@@ -428,10 +280,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(a);
     });
 
-    printPdfBtn.addEventListener('click', generatePDF);
-
     enableWm.addEventListener('change', () => {
-        wmControlsContainer.style.display = enableWm.checked ? 'block' : 'none';
+        // Re-seleccionar el contenedor en caso de que la estructura haya cambiado.
+        const controlsContainer = document.getElementById('watermark-controls');
+        if (controlsContainer) {
+            controlsContainer.style.display = enableWm.checked ? 'grid' : 'none';
+        }
         updateWatermarkPreview();
     });
     wmControls.forEach(id => {
@@ -445,23 +299,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('wmAlphaVal').textContent = e.target.value;
     });
 
-    pdfLayoutControls.forEach(id => {
-        document.getElementById(id).addEventListener('input', updatePdfLayoutPreview);
-        document.getElementById(id).addEventListener('change', updatePdfLayoutPreview);
-    });
-
-    outWidthInput.addEventListener('input', () => updateLinkedDimensions('px'));
+    outWidthInput.addEventListener('input', () => updateLinkedDimensions());
     outHeightInput.addEventListener('input', () => { /* no-op to prevent loops */ });
-    outWidthMmInput.addEventListener('input', () => updateLinkedDimensions('mm'));
-    outHeightMmInput.addEventListener('input', () => { /* no-op to prevent loops */ });
-
-    aspectRatioSelect.addEventListener('change', () => {
-        updateLinkedDimensions('px');
-        updateLinkedDimensions('mm');
-    });
+    aspectRatioSelect.addEventListener('change', () => updateLinkedDimensions());
 
     // --- Inicialización ---
     updateWatermarkPreview();
-    updatePdfLayoutPreview();
     wmControlsContainer.style.display = enableWm.checked ? 'block' : 'none';
 });
