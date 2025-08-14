@@ -83,7 +83,7 @@
                         </select>
                     </div>
                 </div>
-                <div id="initialPreviewContainer" class="mt-6 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4">
+                <div id="initialPreviewContainer" class="mt-6 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4 hidden bg-stone-100 dark:bg-stone-800 p-2 rounded-md border dark:border-stone-700">
                     <!-- Previsualización de imágenes cargadas -->
                 </div>
             </section>
@@ -153,19 +153,13 @@
         <aside class="lg:col-span-1 order-1 lg:order-2">
             <div class="sticky top-8 bg-blue-50 border border-blue-200 rounded-lg p-6 dark:bg-stone-800/50 dark:border-stone-700">
                 <h2 class="text-xl font-semibold text-blue-800 mb-4 dark:text-orange-300 tracking-tight">¿Cómo funciona?</h2>
-                <ol class="list-decimal list-inside space-y-3 text-sm text-blue-900 dark:text-orange-200">
+                <ol class="list-decimal list-inside space-y-3 text-base text-blue-900 dark:text-orange-200">
                   <li><b>Sube tus imágenes:</b> Carga todas las imágenes que necesites. Se ordenarán automáticamente por nombre.</li>
                   <li><b>Define el recorte:</b> Elige una relación de aspecto para asegurar que todas las imágenes tengan un formato consistente.</li>
                   <li><b>Añade una secuencia (Opcional):</b> Activa la marca de agua para añadir un número a cada imagen. ¡Puedes personalizar su estilo y ver el resultado en la vista previa al instante!</li>
                   <li><b>Procesa las imágenes:</b> Haz clic en "Procesar" para aplicar los cambios. Verás el resultado en la galería inferior.</li>
-                  <li><b>Configura la salida:</b>
-                      <ul class="list-disc list-inside ml-4 mt-1">
-                          <li><b>Para Descargar (ZIP):</b> Elige el formato (JPG, PNG) y el tamaño en <b>píxeles (px)</b>.</li>
-                          <li><b>Para Imprimir (PDF):</b> Elige el tamaño en <b>milímetros (mm)</b>.</li>
-                      </ul>
-                  </li>
-                  <li><b>Ajusta el PDF:</b> Elige el tamaño del papel, la orientación y los márgenes. La <b>vista previa del layout</b> te mostrará en tiempo real cuántas imágenes caben por hoja.</li>
-                  <li><b>Genera tus archivos:</b> Descarga las imágenes en un archivo ZIP o genera el PDF listo para imprimir.</li>
+                  <li><b>Configura la salida:</b> Elige el formato (JPG, PNG) y el tamaño en <b>píxeles (px)</b>.</li>
+                  <li><b>Genera tus archivos:</b> Descarga las imágenes en un archivo ZIP.</li>
                 </ol>
             </div>
         </aside>

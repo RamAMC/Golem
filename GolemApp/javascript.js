@@ -121,7 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners ---
     fileInput.addEventListener('change', (event) => {
         const files = Array.from(event.target.files);
-        if (files.length === 0) return;
+         if (files.length === 0) return;
+
+        // Mostrar el contenedor
+        initialPreviewContainer.classList.remove('hidden');
+
 
         files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
         images = [];
