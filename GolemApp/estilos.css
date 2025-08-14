@@ -13,8 +13,9 @@
   background: #f7f7f7;
   border-radius: 6px;
   border: 1px solid #ddd;
-  max-width: 350px;
+  max-width: 350px; /* Solo para móviles */
 }
+
 .watermark-controls label {
   margin-right: 6px;
 }
