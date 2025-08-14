@@ -57,6 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Lógica de la Interfaz (UI) ---
 
+    function showLoader(button) {
+        button.querySelector('.button-text').classList.add('hidden');
+        button.querySelector('.button-loader').classList.remove('hidden');
+        button.disabled = true;
+    }
+
+    function hideLoader(button) {
+        button.querySelector('.button-text').classList.remove('hidden');
+        button.querySelector('.button-loader').classList.add('hidden');
+        button.disabled = false;
+    }
+
     function updateWatermarkPreview() {
         const ctx = wmPreviewCanvas.getContext('2d');
         const w = wmPreviewCanvas.width;
@@ -134,153 +146,167 @@ document.addEventListener('DOMContentLoaded', () => {
 
     processBtn.addEventListener('click', () => {
         if (images.length === 0) return;
+        showLoader(processBtn);
 
-        const processedImages = [];
-        previewContainer.innerHTML = '';
-        const targetAspect = (() => {
-            const [w, h] = aspectRatioSelect.value.split(':').map(Number);
-            return w / h;
-        })();
+        // We use a small timeout to allow the browser to render the loader before starting the heavy image processing.
+        // This prevents the UI from freezing without showing feedback.
+        setTimeout(() => {
+            const processedImages = [];
+            previewContainer.innerHTML = '';
+            const targetAspect = (() => {
+                const [w, h] = aspectRatioSelect.value.split(':').map(Number);
+                return w / h;
+            })();
 
-        const imgElements = images.map(imgObj => {
-          const img = new window.Image();
-          img.src = imgObj.src;
-          return img;
-        });
+            const imgElements = images.map(imgObj => {
+              const img = new window.Image();
+              img.src = imgObj.src;
+              return img;
+            });
 
-        Promise.all(imgElements.map(img => new Promise(res => { if(img.complete) res(); else img.onload = res; }))).then(() => {
-          let minWidth = Math.min(...imgElements.map(img => img.naturalWidth));
-          let minHeight = Math.min(...imgElements.map(img => img.naturalHeight));
+            Promise.all(imgElements.map(img => new Promise(res => { if(img.complete) res(); else img.onload = res; }))).then(() => {
+              let minWidth = Math.min(...imgElements.map(img => img.naturalWidth));
+              let minHeight = Math.min(...imgElements.map(img => img.naturalHeight));
 
-          let cropWidth = minWidth;
-          let cropHeight = Math.round(cropWidth / targetAspect);
-          if (cropHeight > minHeight) {
-            cropHeight = minHeight;
-            cropWidth = Math.round(cropHeight * targetAspect);
-          }
+              let cropWidth = minWidth;
+              let cropHeight = Math.round(cropWidth / targetAspect);
+              if (cropHeight > minHeight) {
+                cropHeight = minHeight;
+                cropWidth = Math.round(cropHeight * targetAspect);
+              }
 
-          const croppedImages = imgElements.map(img => {
-            const sx = Math.floor((img.naturalWidth - cropWidth) / 2);
-            const sy = Math.floor((img.naturalHeight - cropHeight) / 2);
-            const canvas = document.createElement('canvas');
-            canvas.width = cropWidth;
-            canvas.height = cropHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, sx, sy, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
-            return canvas;
-          });
+              const croppedImages = imgElements.map(img => {
+                const sx = Math.floor((img.naturalWidth - cropWidth) / 2);
+                const sy = Math.floor((img.naturalHeight - cropHeight) / 2);
+                const canvas = document.createElement('canvas');
+                canvas.width = cropWidth;
+                canvas.height = cropHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, sx, sy, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+                return canvas;
+              });
 
-          const width = cropWidth;
-          const height = cropHeight;
-          const halfHeight = Math.floor(height / 2);
+              const width = cropWidth;
+              const height = cropHeight;
+              const halfHeight = Math.floor(height / 2);
 
-          outWidthInput.value = width;
-          outHeightInput.value = height;
+              outWidthInput.value = width;
+              outHeightInput.value = height;
 
-          for (let i = 0; i < croppedImages.length; i++) {
-            const imgTop = croppedImages[i];
-            const imgBottom = croppedImages[(i + 1) % croppedImages.length];
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(imgTop, 0, 0, width, halfHeight, 0, 0, width, halfHeight);
-            ctx.drawImage(imgBottom, 0, halfHeight, width, height - halfHeight, 0, halfHeight, width, height - halfHeight);
+              for (let i = 0; i < croppedImages.length; i++) {
+                const imgTop = croppedImages[i];
+                const imgBottom = croppedImages[(i + 1) % croppedImages.length];
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(imgTop, 0, 0, width, halfHeight, 0, 0, width, halfHeight);
+                ctx.drawImage(imgBottom, 0, halfHeight, width, height - halfHeight, 0, halfHeight, width, height - halfHeight);
 
-            if (enableWm.checked) {
-                const numero = (i + 1).toString();
-                const wmSize = parseInt(document.getElementById('wmSize').value, 10);
-                const wmColor = document.getElementById('wmColor').value;
-                const wmAlpha = parseInt(document.getElementById('wmAlpha').value, 10) / 100;
-                const wmFont = document.getElementById('wmFont').value;
-                const wmPos = document.getElementById('wmPos').value;
-                const fontSize = Math.floor(height * (wmSize / 100));
-                let x, y, align, baseline;
+                if (enableWm.checked) {
+                    const numero = (i + 1).toString();
+                    const wmSize = parseInt(document.getElementById('wmSize').value, 10);
+                    const wmColor = document.getElementById('wmColor').value;
+                    const wmAlpha = parseInt(document.getElementById('wmAlpha').value, 10) / 100;
+                    const wmFont = document.getElementById('wmFont').value;
+                    const wmPos = document.getElementById('wmPos').value;
+                    const fontSize = Math.floor(height * (wmSize / 100));
+                    let x, y, align, baseline;
 
-                switch (wmPos) {
-                  case 'br': x = width - 15; y = height - 15; align = 'right'; baseline = 'bottom'; break;
-                  case 'bl': x = 15; y = height - 15; align = 'left'; baseline = 'bottom'; break;
-                  case 'tr': x = width - 15; y = 15 + fontSize; align = 'right'; baseline = 'top'; break;
-                  case 'tl': x = 15; y = 15 + fontSize; align = 'left'; baseline = 'top'; break;
+                    switch (wmPos) {
+                      case 'br': x = width - 15; y = height - 15; align = 'right'; baseline = 'bottom'; break;
+                      case 'bl': x = 15; y = height - 15; align = 'left'; baseline = 'bottom'; break;
+                      case 'tr': x = width - 15; y = 15 + fontSize; align = 'right'; baseline = 'top'; break;
+                      case 'tl': x = 15; y = 15 + fontSize; align = 'left'; baseline = 'top'; break;
+                    }
+
+                    ctx.save();
+                    ctx.font = `${fontSize}px ${wmFont}`;
+                    ctx.textAlign = align;
+                    ctx.textBaseline = baseline;
+                    ctx.globalAlpha = wmAlpha;
+                    ctx.fillStyle = wmColor;
+                    ctx.fillText(numero, x, y);
+                    ctx.restore();
                 }
 
-                ctx.save();
-                ctx.font = `${fontSize}px ${wmFont}`;
-                ctx.textAlign = align;
-                ctx.textBaseline = baseline;
-                ctx.globalAlpha = wmAlpha;
-                ctx.fillStyle = wmColor;
-                ctx.fillText(numero, x, y);
-                ctx.restore();
-            }
+                const resultImg = document.createElement('img');
+                resultImg.src = canvas.toDataURL('image/png');
+                resultImg.className = 'w-full h-full object-cover rounded-md';
+                resultImg.addEventListener('click', () => {
+                  const win = window.open();
+                  win.document.write(`<img src="${resultImg.src}" style="max-width:100vw;max-height:100vh;display:block;margin:auto;">`);
+                });
+                previewContainer.appendChild(resultImg);
+                processedImages.push(canvas.toDataURL('image/png'));
+              }
 
-            const resultImg = document.createElement('img');
-            resultImg.src = canvas.toDataURL('image/png');
-            resultImg.className = 'w-full h-full object-cover rounded-md';
-            resultImg.addEventListener('click', () => {
-              const win = window.open();
-              win.document.write(`<img src="${resultImg.src}" style="max-width:100vw;max-height:100vh;display:block;margin:auto;">`);
+              window.processedImages = processedImages;
+              downloadBtn.disabled = false;
+              resultsSection.classList.remove('hidden');
+              setTimeout(() => {
+                resultsSection.classList.remove('opacity-0');
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+              }, 10);
+            }).finally(() => {
+                hideLoader(processBtn);
             });
-            previewContainer.appendChild(resultImg);
-            processedImages.push(canvas.toDataURL('image/png'));
-          }
-
-          window.processedImages = processedImages;
-          downloadBtn.disabled = false;
-          resultsSection.classList.remove('hidden');
-          setTimeout(() => {
-            resultsSection.classList.remove('opacity-0');
-            resultsSection.scrollIntoView({ behavior: 'smooth' });
-          }, 10);
-        });
+        }, 10);
     });
 
     downloadBtn.addEventListener('click', async () => {
         if (!window.processedImages || window.processedImages.length === 0) return;
+        showLoader(downloadBtn);
+        // A short delay to ensure the loader is visible before blocking the main thread
+        await new Promise(resolve => setTimeout(resolve, 50));
 
-        const outWidth = parseInt(outWidthInput.value, 10);
-        const outHeight = parseInt(outHeightInput.value, 10);
-        const outFormat = document.getElementById('outFormat').value;
+        try {
+            const outWidth = parseInt(outWidthInput.value, 10);
+            const outHeight = parseInt(outHeightInput.value, 10);
+            const outFormat = document.getElementById('outFormat').value;
 
-        if (typeof JSZip === 'undefined') {
-          alert('JSZip no está cargado.');
-          return;
+            if (typeof JSZip === 'undefined') {
+              alert('JSZip no está cargado.');
+              return;
+            }
+            const zip = new JSZip();
+
+            for (let idx = 0; idx < window.processedImages.length; idx++) {
+              const dataUrl = window.processedImages[idx];
+              const img = new window.Image();
+              img.src = dataUrl;
+              await new Promise(res => { img.onload = res; });
+
+              const canvas = document.createElement('canvas');
+              canvas.width = outWidth;
+              canvas.height = outHeight;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, outWidth, outHeight);
+
+              let ext = outFormat;
+              let mime = `image/${outFormat}`;
+              if (outFormat === 'jpeg') ext = 'jpg';
+
+              const outDataUrl = canvas.toDataURL(mime);
+              let origName = images[idx]?.name || `imagen_${idx+1}`;
+              origName = origName.replace(/\.[^.]+$/, '');
+              const finalName = `${origName}_${idx+1}.${ext}`;
+
+              const res = await fetch(outDataUrl);
+              const blob = await res.blob();
+              zip.file(finalName, blob);
+            }
+
+            const content = await zip.generateAsync({type: 'blob'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(content);
+            a.download = 'imagenes_procesadas.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } finally {
+            hideLoader(downloadBtn);
         }
-        const zip = new JSZip();
-
-        for (let idx = 0; idx < window.processedImages.length; idx++) {
-          const dataUrl = window.processedImages[idx];
-          const img = new window.Image();
-          img.src = dataUrl;
-          await new Promise(res => { img.onload = res; });
-
-          const canvas = document.createElement('canvas');
-          canvas.width = outWidth;
-          canvas.height = outHeight;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, outWidth, outHeight);
-
-          let ext = outFormat;
-          let mime = `image/${outFormat}`;
-          if (outFormat === 'jpeg') ext = 'jpg';
-
-          const outDataUrl = canvas.toDataURL(mime);
-          let origName = images[idx]?.name || `imagen_${idx+1}`;
-          origName = origName.replace(/\.[^.]+$/, '');
-          const finalName = `${origName}_${idx+1}.${ext}`;
-
-          const res = await fetch(outDataUrl);
-          const blob = await res.blob();
-          zip.file(finalName, blob);
-        }
-
-        const content = await zip.generateAsync({type: 'blob'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(content);
-        a.download = 'imagenes_procesadas.zip';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
     });
 
     enableWm.addEventListener('change', () => {
