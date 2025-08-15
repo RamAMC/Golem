@@ -9,7 +9,7 @@
 ---
 
 ## 📖 Descripción  
-Peuqeña web app de edicion de imagenes para imprimir y utilizar en la construccion de folioscopios mecanicos.
+Pequeña web app de edición de imágenes para imprimir y utilizar en la construcción de folioscopios mecánicos.
 
 ---
 
@@ -23,7 +23,7 @@ Peuqeña web app de edicion de imagenes para imprimir y utilizar en la construcc
 ## 📦 Instalación y uso  
 1. Clonar este repositorio  
    ```bash
-   git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+   git clone https://github.com/ramamc/Golem.git
    ```
 2. Abrir el archivo `index.html` en tu navegador  
 3. ¡Listo!  
