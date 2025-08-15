@@ -1,7 +1,7 @@
 # Golem
 # 🌐 Golem de Papel
 
-![Vista previa](.img/preview.png)
+![Vista previa](.docs/img/preview.png)
 
 ---
 
