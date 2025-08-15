@@ -1,12 +1,11 @@
 # Golem
-# 🌐 Nombre de tu Página Web
+# 🌐 Golem de Papel
 
 ![Vista previa](.img/preview.png)
 
 ---
 
-## 📍 Demo en vivo  
-🔗 **[Ver el sitio online](https://ramamc.github.io/Golem/)**
+## 📍 🔗 **[Ver el sitio online](https://ramamc.github.io/Golem/)**
 
 ---
 
