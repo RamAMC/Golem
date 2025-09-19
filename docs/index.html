@@ -5,10 +5,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Golem de Papel</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilos.css">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/icons/favicon-180x180.png">
+  <link id="favicon" rel="icon" href="img/icons/frames_pulse/pulse-00.png" type="image/png">
+  <script>
+    const frames = [...Array(12).keys()].map(i => `img/icons/frames_pulse/pulse-${String(i).padStart(2, "0")}.png`);
+    let i = 0;
+    setInterval(() => {
+      document.getElementById("favicon").href = frames[i % frames.length];
+      i++;
+    }, 120);
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+  <link rel="manifest" href="img/icons/site.webmanifest">
+  <meta name="description" content="Convierte tus videos e imágenes en un folioscopio!">
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Unica+One&family=Zilla+Slab:wght@400;700&family=Shadows+Into+Light&family=Roboto:wght@400;700&display=swap"
+    as="style" onload="this.rel='stylesheet'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unica+One&family=Zilla+Slab:wght@400;700&family=Shadows+Into+Light&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <link rel="stylesheet" href="dist/styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -16,54 +35,97 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Roboto', 'system-ui', 'sans-serif']
-          }
-        }
-      }
+            title: ['Unica One', 'sans-serif'],
+            body: ['Zilla Slab', 'serif'],
+            accent: ['Shadows Into Light', 'cursive'],
+            roboto: ['Roboto', 'sans-serif'],
+            main: ['Alpaloza', 'sans-serif'],
+          },
+        },
+      },
     }
   </script>
 </head>
 
-<body class="bg-stone-100 dark:bg-stone-950 min-h-screen font-sans">
-  <header class="flex flex-col items-center mt-8 mb-6 relative">
-    <!--<button id="toggleDark" class="absolute right-4 top-2 text-gray-500 hover:text-blue-700 dark:text-gray-300 dark:hover:text-yellow-300 text-lg transition">🌙/☀️</button>-->
-    <div class="absolute right-4 top-2">
+<body class="bg-stone-100 dark:bg-stone-950 min-h-screen">
+  <header class="mx-auto max-w-7xl flex flex-col items-center mt-8 mb-4 relative">
+    <!-- Toggle dark/light (desktop) -->
+    <div class="absolute rotate-90 -right-4 top-10 md:rotate-0 md:right-4 md:top-2 md:block">
       <label class="relative inline-flex items-center gap-2">
         <!-- Icono del sol -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500 dark:text-yellow-900" viewBox="0 0 20 20"
-          fill="currentColor">
-          <path fillRule="evenodd"
-            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-            clipRule="evenodd" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+          class="text-yellow-500 dark:text-yellow-900" viewBox="0 0 16 16">
+          <path
+            d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708" />
         </svg>
-
         <!-- Switch -->
         <div class="relative">
           <input type="checkbox" id="toggleDark" class="sr-only peer">
           <div
-            class="w-11 h-6 bg-blue-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 dark:peer-checked:bg-orange-800 dark:bg-gray-700">
+            class="w-11 h-6 bg-blue-200 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 dark:peer-checked:bg-amber-800 dark:bg-gray-700">
           </div>
         </div>
-
         <!-- Icono de la luna -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-900 dark:text-gray-300" viewBox="0 0 20 20"
-          fill="currentColor">
-          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="-rotate-90 md:rotate-0 text-slate-950 dark:text-slate-300" viewBox="0 0 16 16">
+          <path
+            d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278" />
+          <path
+            d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z" />
         </svg>
       </label>
     </div>
-    <img src="img/golem_logo.png" alt="Logo Golem de Papel" class="w-28 h-28 rounded-full shadow mb-2 object-cover"
-      id="logo-img" />
-    <a href="https://www.instagram.com/golemdepapel/" target="_blank" rel="noopener"
-      class="flex items-center gap-2 text-blue-700 hover:text-pink-600 text-base font-medium dark:text-purple-400 dark:hover:text-orange-300">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6">
-        <path
-          d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5zm5.13.62a1.13 1.13 0 1 1-2.25 0a1.13 1.13 0 0 1 2.25 0z" />
-      </svg>
-      @golemdepapel
-    </a>
+
+    <!-- Logo y título -->
+    <div class="flex flex-col items-center">
+      <!-- Fila superior: logo + título -->
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <img src="img/GdP_logo_2.png" alt="Logo Golem de Papel" class="w-28 h-28 rounded-full shadow object-cover"
+          id="logo-img" />
+
+        <!-- Título -->
+        <div class="ml-6 text-stone-800 dark:text-stone-300 text-center font-main leading-none">
+          <!-- Versión cuadrada (solo en mobile) -->
+          <div class="flex justify-center items-start md:hidden">
+            <!-- Columna 1 -->
+            <div class="flex flex-col">
+              <span class="text-[clamp(4rem,14vw,6rem)] leading-none">G</span>
+              <span class="text-[clamp(1.8rem,5vw,2.7rem)] leading-none -mt-3">DE</span>
+            </div>
+
+            <!-- Columna 2 -->
+            <div class="flex flex-col">
+              <span class="text-[clamp(3.2rem,10vw,4.8rem)] leading-none -ml-1">OLEM</span>
+              <span class="text-[clamp(3rem,10vw,4.5rem)] leading-none -mt-3">PAPEL</span>
+            </div>
+          </div>
+
+          <!-- Versión lineal (desde md en adelante) -->
+          <div class="hidden md:block">
+            <span class="text-[clamp(3.5rem,6vw,5rem)]">GOLEM DE PAPEL</span>
+          </div>
+
+        </div>
+      </div>
+      <!-- Link y Toggle Contenedor (mobile) -->
+      <div class="flex flex-col items-center justify-center gap-8 mt-4">
+        <span class="text-stone-500 dark:text-stone-400 font-accent md:text-2xl" data-i18n="header.tagline">
+          Convierte tus videos e imágenes en un folioscopio!</span>
+        <!-- Link a Instagram -->
+        <a href="https://www.instagram.com/golemdepapel/" target="_blank" rel="noopener"
+          class="flex items-center gap-2 text-blue-700 hover:text-pink-600 text-base font-medium dark:text-purple-400 dark:hover:text-amber-300">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-instagram"
+            viewBox="0 0 16 16">
+            <path
+              d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+          </svg>
+          @golemdepapel
+        </a>
+      </div>
+    </div>
   </header>
-  <main class="container mx-auto max-w-5xl p-4 space-y-8">
+  <main class="container mx-auto max-w-7xl p-4 space-y-8">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Columna Principal de Controles -->
       <div class="lg:col-span-2 space-y-8 order-2 lg:order-1">
@@ -71,47 +133,152 @@
         <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
           <div class="flex items-center gap-4 mb-4">
             <div
-              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">
-              1</div>
-            <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Carga y Configuración</h2>
+              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+              A</div>
+            <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+              data-i18n="step1.title">Carga y Configuración</h2>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label for="fileInput" class="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">Sube tus
-                imágenes:</label>
-              <input type="file" id="fileInput" accept="image/*" multiple
-                class="block w-full text-sm text-stone-700 dark:text-stone-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 dark:hover:file:bg-orange-900 dark:file:bg-orange-800 dark:file:text-stone-300" />
+              <label for="fileInput" class="block text-stone-700 dark:text-stone-300 mb-2">
+                <b data-i18n="step1.upload_label">Carga tus imágenes o video: </b></label>
+              <input type="file" id="fileInput" accept="image/*,video/*" multiple
+                class="block w-full text-stone-700 dark:text-stone-300 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:font-bold file:bg-blue-600 file:text-stone-100 hover:file:bg-blue-700 dark:hover:file:bg-amber-900 dark:file:bg-amber-800 dark:file:text-stone-300" />
             </div>
             <div>
-              <label for="aspectRatio" class="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
-                Define la relación de aspecto:
+              <label for="aspectRatio" class="block text-stone-700 dark:text-stone-300 mb-2">
+                <b data-i18n="step1.aspect_ratio_label">Define la relación de aspecto: </b>
                 <span class="relative group">
-                  <span class="ml-1 text-xs text-blue-500 dark:text-orange-400 cursor-help">[?]</span>
+                  <span class="ml-1 text-blue-500 dark:text-amber-400 cursor-help">[?]</span>
                   <span
-                    class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                    class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-slate-400 dark:bg-slate-800 text-stone-900 dark:text-stone-100 font-accent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+                    data-i18n="step1.aspect_ratio_tooltip">
                     Todas las imágenes se recortarán a esta proporción para mantener un formato consistente. El recorte
                     se hace desde el centro.
                   </span>
                 </span>
               </label>
               <select id="aspectRatio"
-                class="w-full border rounded-md px-3 py-2 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                <option value="1:1">1:1 (Cuadrado)</option>
-                <option value="4:3">4:3 (Clásico)</option>
-                <option value="3:2">3:2 (Foto)</option>
-                <option value="16:9">16:9 (Panorámico)</option>
+                class="w-full border border-slate-400 bg-slate-200 font-body text-lg rounded-md px-3 py-2 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                <option value="1:1" data-i18n="step1.aspect_ratio_square">1:1 (Cuadrado)</option>
+                <option value="4:3" data-i18n="step1.aspect_ratio_classic">4:3 (Clásico)</option>
+                <option value="3:2" data-i18n="step1.aspect_ratio_photo">3:2 (Foto)</option>
+                <option value="16:9" data-i18n="step1.aspect_ratio_panoramic">16:9 (Panorámico)</option>
               </select>
             </div>
           </div>
           <!-- Mensaje de advertencia -->
           <div id="warningMessage"
-            class="hidden mt-3 p-3 bg-yellow-100 border border-yellow-400 text-yellow-800 rounded-lg shadow-sm transition-all duration-300 ease-in-out">
-            ⚠ La relación de aspecto actual es distinta a la usada en las imágenes procesadas.<br>
-            <b>Reprocesa o ajusta la relación para habilitar la descarga.</b>
+            class="hidden mt-3 p-3 bg-amber-100 border border-amber-400 text-amber-800 rounded-lg shadow-md transition-all duration-300 ease-in-out">
+            <span data-i18n="step1.warning_message_line1">La relación de aspecto actual es distinta a la usada en las
+              imágenes procesadas.</span><br>
+            <b data-i18n="step1.warning_message_line2">Reprocesa o ajusta la relación para habilitar la descarga.</b>
           </div>
+
+          <div id="videoContainer"
+            class="hidden mt-6 space-y-4 p-4 bg-stone-100 dark:bg-stone-800 rounded-lg border dark:border-stone-700 shadow-sm">
+            <!-- Reproductor -->
+            <div class="relative rounded-lg overflow-hidden bg-black shadow-md">
+              <video id="video" class="w-full" controls muted controlsList="nodownload"
+                data-i18n="step1.video_unsupported">
+                Tu navegador no soporta la reproducción de video.
+              </video>
+            </div>
+
+            <!-- Controles -->
+            <div id="videoControls" class="space-y-4">
+              <!-- Rango -->
+              <div
+                class="space-y-3 p-3 bg-stone-200 dark:bg-stone-800/50 rounded-md border dark:border-stone-700/50 shadow-md">
+                <div class="flex items-center justify-between text-sm text-stone-600 dark:text-stone-400">
+                  <b><span data-i18n="step1.range_label">Rango de extracción:</span> <span
+                      id="rangeDuration">0s</span></b>
+                  <b><span data-i18n="step1.current_time_label">Tiempo Actual:</span> <span
+                      id="actualTime">0s</span></b>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1">
+                    <label for="startSlider" class="text-stone-600 dark:text-stone-400"><span
+                        data-i18n="step1.start_label">Inicio:</span> <span id="startLabel"
+                        class="font-bold">0s</span></label>
+                    <label for="endSlider" class="text-stone-600 dark:text-stone-400"><span
+                        data-i18n="step1.end_label">Fin:</span> <span id="endLabel" class="font-bold">0s</span></label>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <input type="range" id="startSlider" min="0" value="0" step="0.1"
+                      class="flex-1 accent-blue-600 dark:accent-amber-600">
+                    <input type="range" id="endSlider" min="0" value="0" step="0.1"
+                      class="flex-1 accent-blue-600 dark:accent-amber-600">
+                  </div>
+                  <!-- Timeline Ruler -->
+                  <div id="timelineRuler" class="relative w-full h-10 mt-2 rounded-lg select-none">
+                    <div id="timelineTicks" class="relative w-full h-full pointer-events-none"></div>
+                    <div id="timelineRange"
+                      class="absolute top-0 h-full border-2 border-blue-700 dark:border-amber-500 rounded-lg cursor-grab active:cursor-grabbing">
+                    </div>
+                  </div>
+                </div>
+                <button id="playBtn"
+                  class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-amber-800 dark:hover:bg-amber-900 text-white text-xl font-accent py-2 px-4 rounded-lg transition"
+                  data-i18n="step1.play_range_button">
+                  Reproducir rango
+                </button>
+              </div>
+
+              <!-- Extracción -->
+              <div
+                class="space-y-3 p-3 bg-stone-200 dark:bg-stone-800/50 rounded-md border dark:border-stone-800 shadow-md">
+                <div class="flex items-center justify-between">
+                  <label for="frameCount" class="text-sm font-medium text-stone-600 dark:text-stone-400"
+                    data-i18n="step1.extract_count_label">
+                    Imágenes a extraer:
+                  </label>
+                  <input type="number" id="frameCount" value="24" min="1" max="500"
+                    class="w-20 text-center border border-slate-400 bg-slate-200 dark:border-stone-600 rounded-md px-2 py-1 dark:bg-stone-900 text-stone-800 dark:text-stone-200">
+                </div>
+                <div class="flex gap-2 items-stretch">
+                  <button id="extractBtn"
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-amber-800 dark:hover:bg-amber-900 text-white text-xl font-accent font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                    <span data-i18n="step1.extract_button">Extraer imágenes</span>
+                    <span id="extractProgress" class="text-sm opacity-75 hidden"
+                      data-i18n="step1.extract_progress">(0%)</span>
+                  </button>
+                  <div class="relative group">
+                    <button id="downloadFramesBtn"
+                      class="bg-lime-600 hover:bg-lime-700 dark:bg-purple-800 dark:hover:bg-purple-900 text-white font-medium py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 h-full disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled>
+                      <span class="button-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      <span class="button-loader hidden">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                          viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                          </circle>
+                          <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                          </path>
+                        </svg>
+                      </span>
+                    </button>
+                    <span
+                      class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-slate-800 text-white font-accent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+                      data-i18n="step1.download_frames_tooltip">
+                      Descarga las imágenes extraídas sin procesar
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Previsualización de imágenes cargadas -->
           <div id="initialPreviewContainer"
-            class="mt-6 grid grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-4 hidden bg-stone-100 dark:bg-stone-800 p-2 rounded-md border dark:border-stone-700">
+            class="mt-6 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 hidden bg-stone-100 dark:bg-stone-800 p-2 rounded-md border dark:border-stone-700">
           </div>
         </section>
 
@@ -119,39 +286,42 @@
         <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
           <div class="flex items-center gap-4 mb-4">
             <div
-              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">
-              2</div>
-            <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Marca de Agua</h2>
+              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+              B</div>
+            <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+              data-i18n="step2.title">Numeración</h2>
           </div>
 
           <div class="flex items-center mb-4">
             <input type="checkbox" id="enableWm" checked
-              class="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 dark:bg-stone-700 dark:border-stone-600 dark:checked:bg-orange-600">
-            <label for="enableWm" class="ml-3 text-stone-800 dark:text-stone-300">Habilitar secuencia numérica
+              class="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500 dark:bg-stone-700 dark:border-stone-600 dark:checked:bg-amber-600">
+            <label for="enableWm" class="ml-3 font-bold text-stone-800 dark:text-stone-300"
+              data-i18n="step2.enable_label">Habilitar secuencia numérica
               (Opcional)</label>
           </div>
 
-          <div id="watermark-controls" class="grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4">
+          <div id="watermarkControls" class="flex flex-col font-body text-lg md:grid md:grid-cols-5 gap-x-6 gap-y-4">
             <!-- Fila 1: Slider de Tamaño -->
             <div class="md:col-span-3 flex flex-wrap items-center gap-2">
-              <label for="wmSize" class="dark:text-stone-300">Tamaño (% altura):</label>
+              <label for="wmSize" class="dark:text-stone-300" data-i18n="step2.size_label">Tamaño (% altura):</label>
               <input type="range" id="wmSize" min="5" max="20" value="8"
-                class="dark:accent-orange-600 accent-blue-600 flex-1">
+                class="dark:accent-amber-600 accent-blue-600 flex-1">
               <span id="wmSizeVal" class="w-4 text-right dark:text-stone-300">8</span><span
                 class="dark:text-stone-300">%</span>
             </div>
 
-            <!-- Vista Previa (ocupa 3 filas) -->
-            <div class="md:col-start-4 md:row-start-1 md:row-span-3 flex items-center justify-center">
+            <!-- Vista Previa (ocupa 3 filas en desktop, al final en movil) -->
+            <div
+              class="order-last md:col-start-4 md:col-span-2 md:row-start-1 md:row-span-3 flex items-center justify-center">
               <canvas id="wmPreview" width="150" height="150"
-                class="bg-gray-200 dark:bg-stone-700/50 rounded-md shadow-inner mx-auto"></canvas>
+                class="bg-gray-200 dark:bg-stone-800 rounded-md shadow-inner mx-auto"></canvas>
             </div>
 
             <!-- Fila 2: Slider de Opacidad -->
             <div class="md:col-span-3 flex flex-wrap items-center gap-2">
-              <label for="wmAlpha" class="dark:text-stone-300">Opacidad:</label>
+              <label for="wmAlpha" class="dark:text-stone-300" data-i18n="step2.opacity_label">Opacidad:</label>
               <input type="range" id="wmAlpha" min="10" max="100" value="70"
-                class="dark:accent-orange-600 accent-blue-600 flex-1">
+                class="dark:accent-amber-600 accent-blue-600 flex-1">
               <span id="wmAlphaVal" class="w-6 text-right dark:text-stone-300">70</span><span
                 class="dark:text-stone-300">%</span>
             </div>
@@ -159,27 +329,27 @@
             <!-- Fila 3: Otros Controles -->
             <div class="md:col-span-3 flex flex-wrap items-center gap-4">
               <div class="flex items-center gap-2">
-                <label for="wmColor" class="dark:text-stone-300">Color:</label>
+                <label for="wmColor" class="dark:text-stone-300" data-i18n="step2.color_label">Color:</label>
                 <input type="color" id="wmColor" value="#f7f304" class="w-8 h-8 p-0 border-0 rounded">
               </div>
               <div class="flex items-center gap-2">
-                <label for="wmFont" class="dark:text-stone-300">Fuente:</label>
+                <label for="wmFont" class="dark:text-stone-300" data-i18n="step2.font_label">Fuente:</label>
                 <select id="wmFont"
-                  class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                  <option value="Arial">Arial</option>
-                  <option value="Verdana">Verdana</option>
-                  <option value="Courier New">Courier New</option>
-                  <option value="Times New Roman">Times New Roman</option>
+                  class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                  <option style="font-family: Arial;" value="Arial">Arial</option>
+                  <option style="font-family: Verdana;" value="Verdana">Verdana</option>
+                  <option style="font-family: Courier New;" value="Courier New">Courier New</option>
+                  <option style="font-family: Times New Roman;" value="Times New Roman">Times New Roman</option>
                 </select>
               </div>
               <div class="flex items-center gap-2">
-                <label for="wmPos" class="dark:text-stone-300">Posición:</label>
+                <label for="wmPos" class="dark:text-stone-300" data-i18n="step2.position_label">Posición:</label>
                 <select id="wmPos"
-                  class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
-                  <option value="br">Inferior dcha.</option>
-                  <option value="bl">Inferior izq.</option>
-                  <option value="tr">Superior dcha.</option>
-                  <option value="tl">Superior izq.</option>
+                  class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                  <option value="br" data-i18n="step2.pos_br">Inferior dcha.</option>
+                  <option value="bl" data-i18n="step2.pos_bl">Inferior izq.</option>
+                  <option value="tr" data-i18n="step2.pos_tr">Superior dcha.</option>
+                  <option value="tl" data-i18n="step2.pos_tl">Superior izq.</option>
                 </select>
               </div>
             </div>
@@ -189,13 +359,13 @@
         <!-- PASO 3: Procesar y Previsualizar -->
         <div class="text-center">
           <button id="processBtn" disabled
-            class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-lg font-semibold dark:bg-orange-800 dark:hover:bg-orange-900">
+            class="font-accent text-2xl bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition delay-50 duration-100 ease-in-out hover:scale-105 font-semibold dark:bg-amber-800 dark:hover:bg-amber-900">
             <span class="button-text flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M4 12a8 8 0 108-8" />
               </svg>
-              Procesar Imágenes
+              <span data-i18n="process.button">Procesar Imágenes</span>
             </span>
             <span class="button-loader hidden flex items-center justify-center gap-2">
               <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -205,7 +375,7 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                 </path>
               </svg>
-              Procesando...
+              <span data-i18n="process.loader">Procesando...</span>
             </span>
           </button>
         </div>
@@ -214,32 +384,62 @@
       <!-- Columna Lateral de Ayuda -->
       <aside class="lg:col-span-1 order-1 lg:order-2">
         <div
-          class="sticky top-8 bg-blue-50 border border-blue-200 rounded-lg p-6 dark:bg-stone-800/50 dark:border-stone-700">
-          <h2 class="text-xl font-semibold text-blue-800 mb-4 dark:text-orange-300 tracking-tight">¿Cómo funciona?</h2>
-          <ol class="list-decimal list-inside space-y-3 text-base text-blue-900 dark:text-orange-200">
-            <li><b>Sube tus imágenes:</b> Carga todas las imágenes que necesites. Se ordenarán automáticamente por
-              nombre.</li>
-            <li><b>Define el recorte:</b> Elige una relación de aspecto para asegurar que todas las imágenes tengan un
-              formato consistente.</li>
-            <li><b>Añade una secuencia (Opcional):</b> Activa la marca de agua para añadir un número a cada imagen.
-              ¡Puedes personalizar su estilo y ver el resultado en la vista previa al instante!</li>
-            <li><b>Procesa las imágenes:</b> Haz clic en "Procesar" para aplicar los cambios. Verás el resultado en la
-              galería inferior.</li>
-            <li><b>Configura la salida:</b> Elige el formato (JPG, PNG) y el tamaño en <b>píxeles (px)</b>.</li>
-            <li><b>Genera tus archivos:</b> Descarga las imágenes en un archivo ZIP.</li>
+          class="sticky top-8 bg-blue-50 border-2 border-blue-200 rounded-lg p-6 dark:bg-stone-800 dark:border-stone-700">
+          <h2 class="text-2xl font-title font-semibold text-blue-800 mb-4 dark:text-amber-400 tracking-tight"
+            data-i18n="howItWorks.title">¿Cómo
+            funciona?</h2>
+          <ol class="list-decimal list-inside space-y-3 font-body text-xl text-blue-900 dark:text-amber-100">
+            <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_title">Carga tus archivos:</b>
+              <ul class="list-disc list-inside ml-4 mt-1">
+                <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li1">Imágenes:</b> <span
+                    data-i18n="howItWorks.step1_li1_detail">Carga todas las que necesites. Se ordenarán
+                    automáticamente por nombre.</span></li>
+                <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li2">Vídeo:</b> <span
+                    data-i18n="howItWorks.step1_li2_detail">Selecciona un fragmento y extrae los fotogramas que
+                    desees.</span></li>
+                <li data-i18n="howItWorks.step1_li3">Puedes descargar las imágenes extraídas en un ZIP antes de seguir.
+                </li>
+              </ul>
+            </li>
+            <li><b class="font-accent text-xl" data-i18n="howItWorks.step2_title">Define el recorte:</b> <span
+                data-i18n="howItWorks.step2_detail">Elige una relación de aspecto para asegurar que
+                todas las imágenes tengan un
+                formato consistente.</span></li>
+            <li><b class="font-accent text-xl" data-i18n="howItWorks.step3_title">Agrega numeración (Opcional):</b>
+              <span data-i18n="howItWorks.step3_detail">Activa la marca de agua para añadir un
+                número a cada imagen.
+                Personaliza tamaño, opacidad, color, fuente y posición.</span>
+            </li>
+            <li><b class="font-accent text-xl" data-i18n="howItWorks.step4_title">Procesa las imágenes:</b> <span
+                data-i18n="howItWorks.step4_detail">Haz clic en "Procesar" para aplicar los
+                cambios. Verás el resultado en la galería inferior.</span></li>
+            <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_title">Exporta los archivos:</b>
+              <ul class="list-disc list-inside ml-4 mt-1">
+                <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li1">ZIP:</b> <span
+                    data-i18n="howItWorks.step5_li1_detail">Elige el formato (JPG, PNG, WebP) y el tamaño en <b>píxeles
+                      (px)</b> y descarga.</span></li>
+                <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li2">PDF:</b> <span
+                    data-i18n="howItWorks.step5_li2_detail">Elige el tamaño en <b>milímetros (mm)</b> que tendrán las
+                    imágenes en el papel.</span></li>
+                <li data-i18n="howItWorks.step5_li3">Elige el tamaño del papel, la orientación y los márgenes. Podrás
+                  ver el resultado en la
+                  <b>vista previa del layout</b>.
+                </li>
           </ol>
         </div>
       </aside>
     </div>
+    </div>
 
     <!-- PASO 4: Resultados y Exportación -->
-    <div id="results-section" class="hidden opacity-0 transition-opacity duration-500 space-y-8">
+    <div id="resultsSection" class="transition-opacity duration-500 space-y-8">
       <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
         <div class="flex items-center gap-4 mb-4">
           <div
-            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">
-            3</div>
-          <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Resultados</h2>
+            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+            C</div>
+          <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+            data-i18n="results.title">Resultados</h2>
         </div>
         <div id="previewContainer"
           class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 bg-stone-100 dark:bg-stone-800 p-4 rounded-md min-h-[150px] border dark:border-stone-700">
@@ -250,35 +450,38 @@
       <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
         <div class="flex items-center gap-4 mb-4">
           <div
-            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-orange-700 text-white flex items-center justify-center font-bold text-xl">
-            4</div>
-          <h2 class="text-2xl font-bold tracking-tight text-stone-800 dark:text-stone-200">Exportar</h2>
+            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+            D</div>
+          <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+            data-i18n="export.title">Exportar</h2>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
-          <!-- Columna para Descargar ZIP -->
-          <div class="bg-stone-50 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
-            <h3 class="font-bold text-lg text-blue-700 dark:text-orange-400">Descargar como ZIP</h3>
+        <!-- Columna para Descargar ZIP -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div
+            class="text-lg font-body bg-stone-100 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
+            <h3 class="font-title font-bold text-3xl text-blue-700 dark:text-amber-400" data-i18n="export.zip_title">
+              Descargar como ZIP</h3>
             <div class="flex items-center gap-2">
-              <label for="outFormat" class="dark:text-stone-300">Formato:</label>
+              <label for="outFormat" class="dark:text-stone-300" data-i18n="export.format_label">Formato:</label>
               <select id="outFormat"
-                class="border rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
                 <option value="png">PNG</option>
                 <option value="jpeg">JPG</option>
                 <option value="webp">WebP</option>
               </select>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-              <label for="outWidth" class="dark:text-stone-300">Tamaño (px):</label>
+              <label for="outWidth" class="dark:text-stone-300" data-i18n="export.size_px_label">Tamaño (px):</label>
               <input type="number" id="outWidth" min="10" max="4096" value="800"
-                class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
               <input type="number" id="outHeight" min="10" max="4096" value="600"
-                class="border rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
             </div>
             <div class="pt-4">
               <button id="downloadBtn" disabled
-                class="w-1/2 bg-lime-600 text-white px-3 py-3 rounded-md shadow hover:bg-lime-700 disabled:opacity-50 disabled:cursor-not-allowed transition font-semibold dark:bg-purple-800 dark:hover:bg-purple-900">
-                <span class="button-text">Descargar ZIP</span>
+                class="w-full text-xl font-accent font-bold text-white px-6 py-2 rounded-md shadow bg-lime-600 hover:bg-lime-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-purple-800 dark:hover:bg-purple-900">
+                <span class="button-text" data-i18n="export.zip_button">Descargar ZIP</span>
                 <span class="button-loader hidden flex items-center justify-center gap-2">
                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 24 24">
@@ -287,7 +490,114 @@
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                     </path>
                   </svg>
-                  Descargando...
+                  <span data-i18n="export.zip_loader">Descargando...</span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Columna para Generar PDF -->
+          <div
+            class="text-lg font-body bg-stone-100 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
+            <h3 class="font-title font-bold text-3xl text-blue-700 dark:text-amber-400" data-i18n="export.pdf_title">
+              Generar PDF para Imprimir</h3>
+            <div class="flex flex-wrap items-center gap-2">
+              <label for="outWidthMm" class="dark:text-stone-300" data-i18n="export.size_mm_label">Tamaño (mm):</label>
+              <input type="number" id="outWidthMm" step="0.1" min="5" max="500" value="80"
+                class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+              <input type="number" id="outHeightMm" step="0.1" min="5" max="500" value="80"
+                class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 w-24 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+            </div>
+            <div class="print-controls">
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 space-y-4">
+                  <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex items-center gap-2">
+                      <label for="paperSize" class="dark:text-stone-300" data-i18n="export.paper_label">Papel:</label>
+                      <select id="paperSize"
+                        class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                        <option value="a4">A4</option>
+                        <option value="a3">A3</option>
+                        <option value="Sa3">SA3</option>
+                      </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <label for="printLayout" class="dark:text-stone-300"
+                        data-i18n="export.layout_label">Disposición:</label>
+                      <select id="printLayout"
+                        class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                        <option value="portrait" data-i18n="export.layout_portrait">Vertical</option>
+                        <option value="landscape" data-i18n="export.layout_landscape">Horizontal</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-2">
+                      <label for="printMargin" class="dark:text-stone-300" data-i18n="export.margin_label">Margen
+                        (mm):</label>
+                      <input type="number" id="printMargin" min="0" max="50" value="10"
+                        class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 w-20 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <label for="printSpacing" class="dark:text-stone-300">
+                        <span data-i18n="export.spacing_label">Espacio (mm):</span>
+                        <span class="relative group">
+                          <span class="ml-1 text-blue-500 dark:text-amber-400 cursor-help">[?]</span>
+                          <span
+                            class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 p-2 bg-slate-400 dark:bg-slate-800 text-stone-900 dark:text-stone-100 font-accent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+                            data-i18n="export.spacing_tooltip">
+                            Define el espacio en milímetros que habrá entre cada imagen en la hoja del PDF.
+                          </span>
+                        </span>
+                      </label>
+                      <input type="number" id="printSpacing" min="1" max="50" value="5"
+                        class="border border-slate-400 bg-slate-200 rounded-md px-2 py-1 w-20 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <input type="checkbox" id="bleedCheckbox" checked
+                        class="h-4 w-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500 dark:bg-stone-700 dark:border-stone-600 dark:checked:bg-amber-600">
+                      <label for="bleedCheckbox" class="dark:text-stone-300">
+                        <span data-i18n="export.bleed_label">Sangrado</span>
+                        <span class="relative group">
+                          <span class="ml-1 text-blue-500 dark:text-amber-400 cursor-help">[?]</span>
+                          <span
+                            class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-slate-400 dark:bg-slate-800 text-stone-900 dark:text-stone-100 font-accent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+                            data-i18n="export.bleed_tooltip">
+                            Añade un borde extra a las imágenes para evitar filos blancos al cortar. Si el sangrado está
+                            activado el espaciado tendrá un mínimo que permita verlo.
+                          </span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="relative">
+                  <div class="absolute right-0 bottom-0 w-auto ml-auto">
+                    <canvas id="pdfLayoutPreview" width="120" height="170"
+                      class="bg-white dark:bg-stone-200 rounded-md border border-stone-400 dark:border-stone-600"></canvas>
+                    <span id="pdfPaperSizeLabel"
+                      class="absolute bottom-2 right-2 text-gray-500 dark:text-white/50 font-bold text-lg pointer-events-none"></span>
+                    <span id="pdfWidthLabel"
+                      class="absolute -top-5 left-0 right-0 text-center text-xs text-gray-500 dark:text-gray-400 pointer-events-none"></span>
+                    <span id="pdfHeightLabel"
+                      class="absolute -left-6 top-0 bottom-0 flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 pointer-events-none [writing-mode:vertical-rl] transform rotate-180"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pt-4">
+              <button id="printPdfBtn" disabled
+                class="w-full text-xl font-accent font-bold bg-amber-600 text-white px-6 py-2 rounded-md shadow hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-red-800 dark:hover:bg-red-900">
+                <span class="button-text" data-i18n="export.pdf_button">Generar PDF</span>
+                <span class="button-loader hidden flex items-center justify-center gap-2">
+                  <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                  </svg>
+                  <span data-i18n="export.pdf_loader">Generando...</span>
                 </span>
               </button>
             </div>
@@ -296,20 +606,59 @@
       </section>
     </div>
   </main>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="javascript.js"></script>
 
-  <footer class="bg-gray-100 dark:bg-stone-950 text-stone-700 dark:text-stone-300 py-4">
-    <div class="container mx-auto max-w-5xl flex flex-col md:flex-row justify-center items-center gap-4">
+  <footer
+    class="bg-stone-100 dark:bg-stone-950 text-stone-600 dark:text-stone-400 text-center justify-center p-4 mt-12">
+    <span class="text-sm" data-i18n="footer.copyright">&copy; 2025 Golem de Papel. Todos los derechos reservados.</span>
 
-      <!-- Información legal -->
-      <div class="text-center">
-        <p>© 2025 Golem de Papel. Todos los derechos reservados.</p>
-      </div>
+    <!-- Links de apoyo -->
+    <div class="flex justify-center space-x-2 mt-1 text-sm">
+      <span data-i18n="footer.supportMe"> - Si te gusta, considera apoyarnos</span>
+      <a href="https://paypal.me/RamiroMaroa" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">
+        PayPal
+      </a>
+      <a href="https://cafecito.app/golemdepapel" target="_blank"
+        class="text-amber-600 dark:text-amber-400 hover:underline">
+        Cafecito
+      </a>
+    </div>
+    <div class="flex justify-center space-x-2 mt-1 text-sm">
+      <span data-i18n="footer.madeWith">Hecho con ❤️</span>
+      <a href="https://www.x.com/ramadayenchi/" target="_blank" rel="noopener"
+        class="text-blue-600 hover:text-pink-600 dark:text-purple-400 dark:hover:text-amber-300">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path
+            d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+        </svg>
+      </a>
+      <a href="https://www.github.com/ramamc/golem/" target="_blank" rel="noopener"
+        class="text-blue-600 hover:text-pink-600 dark:text-purple-400 dark:hover:text-amber-300">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+          viewBox="0 0 16 16">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+        </svg>
+      </a>
+    </div>
 
-
+    <!-- Language Links -->
+    <div class="mt-4 text-sm font-medium">
+      <span id="lang-es" class="cursor-pointer transition-colors duration-300">ES</span>
+      <span class="mx-1">|</span>
+      <span id="lang-en" class="cursor-pointer transition-colors duration-300">EN</span>
     </div>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- i18next -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.11.5/i18next.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.5.2/i18nextHttpBackend.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/8.0.0/i18nextBrowserLanguageDetector.min.js"></script>
+  <!-- Main JS -->
+  <script src="dist/main.js"></script>
 </body>
+
 </html>

@@ -4,10 +4,11 @@
 # Excepto estos archivos/carpetas
 !/.gitignore
 !/index.html
-!/javascript.js
-!/estilos.css
+!/main.js
+!/styles.css
 !/img
 !/README.md
+!/docs
 
 # Ignorar archivos del sistema
 .DS_Store
