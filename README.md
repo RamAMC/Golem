@@ -8,38 +8,44 @@
 
 ---
 
-## 📖 Descripción  
-Pequeña web app de edición de imágenes para imprimir y utilizar en la construcción de folioscopios mecánicos.
-
----
-
-## 🚀 Características  
-- 📂 Carga y previsualización de imágenes  
-- ✂️ Ajuste de relación de aspecto y tamaño 
-- 📦 Descarga en ZIP  
-
----
-
-## 📦 Instalación y uso  
-1. Clonar este repositorio  
-   ```bash
-   git clone https://github.com/ramamc/Golem.git
-   ```
-2. Abrir el archivo `index.html` en tu navegador  
-3. ¡Listo!  
-
----
-
-## 🤝 Contribuir  
-Si quieres colaborar:  
-1. Haz un fork  
-2. Crea una nueva rama (`git checkout -b feature/nueva-funcion`)  
-3. Haz tus cambios y haz commit (`git commit -m 'Agrego nueva función'`)  
-4. Haz push a tu rama (`git push origin feature/nueva-funcion`)  
-5. Abre un Pull Request  
-
----
-
-## 📜 Licencia  
-© 2025 Golem de Papel. Todos los derechos reservados.
+| Español | English |
+|---------|---------|
+| ## 📖 Descripción  
+<br> **Golem de Papel** es una aplicación web ligera para preparar imágenes destinadas a la construcción de folioscopios mecánicos. 
+<br> Permite cargar imágenes o videos, editarlos y exportarlos en un formato listo para imprimir y montar. 
+| ## 📖 Description  
+<br> **Golem de Papel** is a lightweight web application to prepare images for building mechanical flipbooks. 
+<br> It allows users to load images or videos, edit them, and export ready-to-print layouts. |
+| ### 🚀 Funcionalidades 
+<br> - Carga de imágenes y extracción de fotogramas desde video 
+<br> - Herramientas de recorte, escala y ajuste de relación de aspecto 
+<br> - Organización de secuencias para folioscopios 
+<br> - Exportación a PDF con marcas de corte 
+<br> - Descarga opcional en ZIP 
+<br> - Funciona localmente en el navegador, sin servidor 
+| ### 🚀 Key Features 
+<br> - Import images or extract frames from video 
+<br> - Crop, scale, and aspect-ratio adjustment tools 
+<br> - Sequence organization for flipbook construction 
+br> - PDF export with cut marks 
+<br> - Optional ZIP package download 
+<br> - Runs locally in the browser, no server required |
+| ### ⚙️ Instalación y uso 
+<br> 1. Clonar el repositorio:  
+<br> ```bash 
+<br> git clone https://github.com/ramamc/Golem.git 
+<br> ``` 
+<br> 2. Abrir `index.html` en un navegador moderno 
+<br> 3. No requiere instalación adicional 
+| ### ⚙️ Installation & Usage 
+<br> 1. Clone the repository:  
+<br> ```bash 
+<br> git clone https://github.com/ramamc/Golem.git 
+<br> ``` 
+<br> 2. Open `index.html` in any modern browser 
+<br> 3. No additional setup required |
+| ### 📜 Licencia 
+<br> © 2025 Golem de Papel. Todos los derechos reservados. 
+| ### 📜 License 
+<br> © 2025 Golem de Papel. All rights reserved. |
 

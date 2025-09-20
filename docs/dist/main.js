@@ -210,7 +210,7 @@
         },
         "footer": {
           "copyright": "&copy; 2025 Golem de Papel. Todos los derechos reservados.",
-          "madeWith": "Hecho con ❤️ por",
+          "madeWith": "Hecho con ❤️ ",
           "supportMe": " - Si te gusta, considera apoyarnos"
         },
         "step1": {
@@ -306,7 +306,7 @@
         },
         "footer": {
           "copyright": "&copy; 2025 Golem de Papel. All rights reserved.",
-          "madeWith": "Made with ❤️ by",
+          "madeWith": "Made with ❤️ ",
           "supportMe": " - If you like it, consider supporting us"
         },
         "step1": {
