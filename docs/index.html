@@ -49,7 +49,8 @@
 
 <body class="bg-stone-100 dark:bg-stone-950 min-h-screen">
   <header class="mx-auto max-w-7xl flex flex-col items-center mb-4 relative">
-    <div class="bg-stone-100 dark:bg-stone-950 text-stone-600 dark:text-stone-400 mt-2 mb-2 flex items-center justify-between w-full px-4 h-6">
+    <div
+      class="bg-stone-100 dark:bg-stone-950 text-stone-600 dark:text-stone-400 mt-2 mb-2 flex items-center justify-between w-full px-4 h-6">
       <!-- Language Links -->
       <div class="text-sm font-medium">
         <span id="lang-es" class="cursor-pointer transition-colors duration-300">ES</span>
@@ -393,47 +394,64 @@
       <aside class="lg:col-span-1 order-1 lg:order-2">
         <div
           class="sticky top-8 bg-blue-50 border-2 border-blue-200 rounded-lg p-6 dark:bg-stone-800 dark:border-stone-700">
-          <h2 class="text-2xl font-title font-semibold text-blue-800 mb-4 dark:text-amber-400 tracking-tight"
-            data-i18n="howItWorks.title">¿Cómo
-            funciona?</h2>
-          <ol class="list-decimal list-inside space-y-3 font-body text-xl text-blue-900 dark:text-amber-100">
-            <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_title">Carga tus archivos:</b>
-              <ul class="list-disc list-inside ml-4 mt-1">
-                <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li1">Imágenes:</b> <span
-                    data-i18n="howItWorks.step1_li1_detail">Carga todas las que necesites. Se ordenarán
-                    automáticamente por nombre.</span></li>
-                <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li2">Vídeo:</b> <span
-                    data-i18n="howItWorks.step1_li2_detail">Selecciona un fragmento y extrae los fotogramas que
-                    desees.</span></li>
-                <li data-i18n="howItWorks.step1_li3">Puedes descargar las imágenes extraídas en un ZIP antes de seguir.
-                </li>
-              </ul>
-            </li>
-            <li><b class="font-accent text-xl" data-i18n="howItWorks.step2_title">Define el recorte:</b> <span
-                data-i18n="howItWorks.step2_detail">Elige una relación de aspecto para asegurar que
-                todas las imágenes tengan un
-                formato consistente.</span></li>
-            <li><b class="font-accent text-xl" data-i18n="howItWorks.step3_title">Agrega numeración (Opcional):</b>
-              <span data-i18n="howItWorks.step3_detail">Activa la marca de agua para añadir un
-                número a cada imagen.
-                Personaliza tamaño, opacidad, color, fuente y posición.</span>
-            </li>
-            <li><b class="font-accent text-xl" data-i18n="howItWorks.step4_title">Procesa las imágenes:</b> <span
-                data-i18n="howItWorks.step4_detail">Haz clic en "Procesar" para aplicar los
-                cambios. Verás el resultado en la galería inferior.</span></li>
-            <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_title">Exporta los archivos:</b>
-              <ul class="list-disc list-inside ml-4 mt-1">
-                <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li1">ZIP:</b> <span
-                    data-i18n="howItWorks.step5_li1_detail">Elige el formato (JPG, PNG, WebP) y el tamaño en <b>píxeles
-                      (px)</b> y descarga.</span></li>
-                <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li2">PDF:</b> <span
-                    data-i18n="howItWorks.step5_li2_detail">Elige el tamaño en <b>milímetros (mm)</b> que tendrán las
-                    imágenes en el papel.</span></li>
-                <li data-i18n="howItWorks.step5_li3">Elige el tamaño del papel, la orientación y los márgenes. Podrás
-                  ver el resultado en la
-                  <b>vista previa del layout</b>.
-                </li>
-          </ol>
+          <!-- Encabezado con botón de colapsar -->
+          <div class="flex items-center justify-between gap-4 mb-4">
+            <h2 class="text-2xl font-title font-semibold text-blue-800 dark:text-amber-400 tracking-tight"
+              data-i18n="howItWorks.title">¿Cómo funciona?</h2>
+            <!-- Botón de colapsar (solo visible en móvil) -->
+            <button id="toggleHelp" class="lg:hidden text-blue-800 dark:text-amber-400 p-2"
+              aria-label="Mostrar/Ocultar ayuda">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transform transition-transform" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+          <!-- Contenido colapsable -->
+          <div id="helpContent" class="lg:block transition-all duration-300 ease-in-out overflow-hidden">
+            <ol class="list-decimal list-inside space-y-3 font-body text-xl text-blue-900 dark:text-amber-100">
+              <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_title">Carga tus archivos:</b>
+                <ul class="list-disc list-inside ml-4 mt-1">
+                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li1">Imágenes:</b> <span
+                      data-i18n="howItWorks.step1_li1_detail">Carga todas las que necesites. Se ordenarán
+                      automáticamente por nombre.</span></li>
+                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li2">Vídeo:</b> <span
+                      data-i18n="howItWorks.step1_li2_detail">Selecciona un fragmento y extrae los fotogramas que
+                      desees.</span></li>
+                  <li data-i18n="howItWorks.step1_li3">Puedes descargar las imágenes extraídas en un ZIP antes de
+                    seguir.
+                  </li>
+                </ul>
+              </li>
+              <li><b class="font-accent text-xl" data-i18n="howItWorks.step2_title">Define el recorte:</b> <span
+                  data-i18n="howItWorks.step2_detail">Elige una relación de aspecto para asegurar que
+                  todas las imágenes tengan un
+                  formato consistente.</span></li>
+              <li><b class="font-accent text-xl" data-i18n="howItWorks.step3_title">Agrega numeración (Opcional):</b>
+                <span data-i18n="howItWorks.step3_detail">Activa la marca de agua para añadir un
+                  número a cada imagen.
+                  Personaliza tamaño, opacidad, color, fuente y posición.</span>
+              </li>
+              <li><b class="font-accent text-xl" data-i18n="howItWorks.step4_title">Procesa las imágenes:</b> <span
+                  data-i18n="howItWorks.step4_detail">Haz clic en "Procesar" para aplicar los
+                  cambios. Verás el resultado en la galería inferior.</span></li>
+              <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_title">Exporta los archivos:</b>
+                <ul class="list-disc list-inside ml-4 mt-1">
+                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li1">ZIP:</b> <span
+                      data-i18n="howItWorks.step5_li1_detail">Elige el formato (JPG, PNG, WebP) y el tamaño en
+                      <b>píxeles
+                        (px)</b> y descarga.</span></li>
+                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li2">PDF:</b> <span
+                      data-i18n="howItWorks.step5_li2_detail">Elige el tamaño en <b>milímetros (mm)</b> que tendrán las
+                      imágenes en el papel.</span></li>
+                  <li data-i18n="howItWorks.step5_li3">Elige el tamaño del papel, la orientación y los márgenes. Podrás
+                    ver el resultado en la
+                    <b>vista previa del layout</b>.
+                  </li>
+            </ol>
+          </div>
         </div>
       </aside>
     </div>
@@ -639,7 +657,7 @@
             d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
         </svg>
       </a>
-    </div>   
+    </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -648,7 +666,8 @@
   <!-- i18next -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/23.11.5/i18next.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/2.5.2/i18nextHttpBackend.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/8.0.0/i18nextBrowserLanguageDetector.min.js"></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/i18next-browser-languagedetector/8.0.0/i18nextBrowserLanguageDetector.min.js"></script>
   <!-- Main JS -->
   <script src="dist/main.js"></script>
 </body>

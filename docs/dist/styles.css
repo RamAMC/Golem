@@ -1522,6 +1522,15 @@
 .watermark-controls input[type='range'] {
   width: 100px;
 }
+#helpContent {
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+@media (max-width: 1023px) {
+  #helpContent {
+    max-height: 0;
+    opacity: 0;
+  }
+}
 body {
   font-family: 'Roboto', sans-serif;
 }

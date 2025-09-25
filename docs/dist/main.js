@@ -761,6 +761,37 @@
       DOM.wmColor.value = '#999999';
     }
   }
+  function initializeHelpPanel() {
+    const toggleHelpBtn = document.getElementById('toggleHelp');
+    const helpContent = document.getElementById('helpContent');
+    const helpIcon = toggleHelpBtn?.querySelector('svg');
+    if (window.innerWidth < 1024) {
+        helpContent.style.maxHeight = '0px';
+        helpContent.style.opacity = '0';
+        helpIcon?.classList.add('rotate-180');
+    }
+    toggleHelpBtn?.addEventListener('click', () => {
+        const isExpanded = helpContent.style.maxHeight !== '0px';
+        if (isExpanded) {
+            helpContent.style.maxHeight = '0px';
+            helpContent.style.opacity = '0';
+            helpIcon?.classList.add('rotate-180');
+        } else {
+            helpContent.style.maxHeight = `${helpContent.scrollHeight}px`;
+            helpContent.style.opacity = '1';
+            helpIcon?.classList.remove('rotate-180');
+        }
+    });
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) { 
+            helpContent.style.maxHeight = 'none';
+            helpContent.style.opacity = '1';
+            helpIcon?.classList.remove('rotate-180');
+        } else if (helpContent.style.maxHeight !== '0px') { 
+            helpContent.style.maxHeight = `${helpContent.scrollHeight}px`;
+        }
+    });
+}
 
   // From docs/js/exporters.js
   function drawCropMarks(doc, x, y, width, height, lengths) {
@@ -1300,6 +1331,7 @@
       updateWatermarkPreview();
       updatePdfLayoutPreview();
     });
+    initializeHelpPanel();
     DOM.enableWm.checked = true;
     resetWatermarkControls();
     toggleWatermarkControls(true);
