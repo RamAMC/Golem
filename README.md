@@ -27,14 +27,6 @@ It allows users to load images or videos, edit them, and export ready-to-print l
 
 ---
 
-## ⚙️ Installation & Usage
-
-1. Clone the repository: git clone ```https://github.com/ramamc/Golem.git```
-2. Open `index.html` in any browser 
-3. No additional setup required
-
----
-
 ## 📜 License
 © 2025 Golem de Papel. All rights reserved.
 

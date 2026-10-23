@@ -112,14 +112,14 @@
 
           <!-- Versión lineal (desde md en adelante) -->
           <div class="hidden md:block">
-            <span class="text-[clamp(3.5rem,6vw,5rem)]">GOLEM DE PAPEL</span>
+            <span class="text-[clamp(2.75rem,5vw,3.5rem)] lg:text-[clamp(3.5rem,6vw,5rem)]">GOLEM DE PAPEL</span>
           </div>
 
         </div>
       </div>
       <!-- Link y Toggle Contenedor (mobile) -->
       <div class="flex flex-col items-center justify-center gap-8 mt-4">
-        <span class="text-stone-500 dark:text-stone-400 font-accent md:text-2xl" data-i18n="header.tagline">
+        <span class="text-stone-500 dark:text-stone-400 font-accent text-base sm:text-lg md:text-xl lg:text-2xl" data-i18n="header.tagline">
           Convierte tus videos e imágenes en un folioscopio!</span>
         <!-- Link a Instagram -->
         <a href="https://www.instagram.com/golemdepapel/" target="_blank" rel="noopener"
@@ -142,9 +142,9 @@
         <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
           <div class="flex items-center gap-4 mb-4">
             <div
-              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-2xl md:text-3xl lg:text-4xl">
               A</div>
-            <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
               data-i18n="step1.title">Carga y Configuración</h2>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -168,7 +168,7 @@
                 </span>
               </label>
               <select id="aspectRatio"
-                class="w-full border border-slate-400 bg-slate-200 font-body text-lg rounded-md px-3 py-2 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
+                class="w-full border border-slate-400 bg-slate-200 font-body text-base md:text-lg rounded-md px-3 py-2 dark:bg-stone-800 dark:border-stone-600 dark:text-stone-300">
                 <option value="1:1" data-i18n="step1.aspect_ratio_square">1:1 (Cuadrado)</option>
                 <option value="4:3" data-i18n="step1.aspect_ratio_classic">4:3 (Clásico)</option>
                 <option value="3:2" data-i18n="step1.aspect_ratio_photo">3:2 (Foto)</option>
@@ -228,7 +228,7 @@
                   </div>
                 </div>
                 <button id="playBtn"
-                  class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-amber-800 dark:hover:bg-amber-900 text-white text-xl font-accent py-2 px-4 rounded-lg transition"
+                  class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-amber-800 dark:hover:bg-amber-900 text-white text-base md:text-lg lg:text-xl font-accent py-2 px-4 rounded-lg transition"
                   data-i18n="step1.play_range_button">
                   Reproducir rango
                 </button>
@@ -247,7 +247,7 @@
                 </div>
                 <div class="flex gap-2 items-stretch">
                   <button id="extractBtn"
-                    class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-amber-800 dark:hover:bg-amber-900 text-white text-xl font-accent font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-amber-800 dark:hover:bg-amber-900 text-white text-base md:text-lg lg:text-xl font-accent font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2">
                     <span data-i18n="step1.extract_button">Extraer imágenes</span>
                     <span id="extractProgress" class="text-sm opacity-75 hidden"
                       data-i18n="step1.extract_progress">(0%)</span>
@@ -295,9 +295,9 @@
         <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
           <div class="flex items-center gap-4 mb-4">
             <div
-              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+              class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-2xl md:text-3xl lg:text-4xl">
               B</div>
-            <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
               data-i18n="step2.title">Numeración</h2>
           </div>
 
@@ -309,7 +309,7 @@
               (Opcional)</label>
           </div>
 
-          <div id="watermarkControls" class="flex flex-col font-body text-lg md:grid md:grid-cols-5 gap-x-6 gap-y-4">
+          <div id="watermarkControls" class="flex flex-col font-body text-base md:text-lg md:grid md:grid-cols-5 gap-x-6 gap-y-4">
             <!-- Fila 1: Slider de Tamaño -->
             <div class="md:col-span-3 flex flex-wrap items-center gap-2">
               <label for="wmSize" class="dark:text-stone-300" data-i18n="step2.size_label">Tamaño (% altura):</label>
@@ -368,7 +368,7 @@
         <!-- PASO 3: Procesar y Previsualizar -->
         <div class="text-center">
           <button id="processBtn" disabled
-            class="font-accent text-2xl bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition delay-50 duration-100 ease-in-out hover:scale-105 font-semibold dark:bg-amber-800 dark:hover:bg-amber-900">
+            class="font-accent text-lg md:text-xl lg:text-2xl bg-blue-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition delay-50 duration-100 ease-in-out hover:scale-105 font-semibold dark:bg-amber-800 dark:hover:bg-amber-900">
             <span class="button-text flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
@@ -396,7 +396,7 @@
           class="sticky top-8 bg-blue-50 border-2 border-blue-200 rounded-lg p-6 dark:bg-stone-800 dark:border-stone-700">
           <!-- Encabezado con botón de colapsar -->
           <div class="flex items-center justify-between gap-4 mb-4">
-            <h2 class="text-2xl font-title font-semibold text-blue-800 dark:text-amber-400 tracking-tight"
+            <h2 class="text-xl md:text-2xl font-title font-semibold text-blue-800 dark:text-amber-400 tracking-tight"
               data-i18n="howItWorks.title">¿Cómo funciona?</h2>
             <!-- Botón de colapsar (solo visible en móvil) -->
             <button id="toggleHelp" class="lg:hidden text-blue-800 dark:text-amber-400 p-2"
@@ -411,13 +411,13 @@
           </div>
           <!-- Contenido colapsable -->
           <div id="helpContent" class="lg:block transition-all duration-300 ease-in-out overflow-hidden">
-            <ol class="list-decimal list-inside space-y-3 font-body text-xl text-blue-900 dark:text-amber-100">
-              <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_title">Carga tus archivos:</b>
+            <ol class="list-decimal list-inside space-y-3 font-body text-base md:text-lg lg:text-xl text-blue-900 dark:text-amber-100">
+              <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step1_title">Carga tus archivos:</b>
                 <ul class="list-disc list-inside ml-4 mt-1">
-                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li1">Imágenes:</b> <span
+                  <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step1_li1">Imágenes:</b> <span
                       data-i18n="howItWorks.step1_li1_detail">Carga todas las que necesites. Se ordenarán
                       automáticamente por nombre.</span></li>
-                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step1_li2">Vídeo:</b> <span
+                  <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step1_li2">Vídeo:</b> <span
                       data-i18n="howItWorks.step1_li2_detail">Selecciona un fragmento y extrae los fotogramas que
                       desees.</span></li>
                   <li data-i18n="howItWorks.step1_li3">Puedes descargar las imágenes extraídas en un ZIP antes de
@@ -425,25 +425,25 @@
                   </li>
                 </ul>
               </li>
-              <li><b class="font-accent text-xl" data-i18n="howItWorks.step2_title">Define el recorte:</b> <span
+              <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step2_title">Define el recorte:</b> <span
                   data-i18n="howItWorks.step2_detail">Elige una relación de aspecto para asegurar que
                   todas las imágenes tengan un
                   formato consistente.</span></li>
-              <li><b class="font-accent text-xl" data-i18n="howItWorks.step3_title">Agrega numeración (Opcional):</b>
+              <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step3_title">Agrega numeración (Opcional):</b>
                 <span data-i18n="howItWorks.step3_detail">Activa la marca de agua para añadir un
                   número a cada imagen.
                   Personaliza tamaño, opacidad, color, fuente y posición.</span>
               </li>
-              <li><b class="font-accent text-xl" data-i18n="howItWorks.step4_title">Procesa las imágenes:</b> <span
+              <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step4_title">Procesa las imágenes:</b> <span
                   data-i18n="howItWorks.step4_detail">Haz clic en "Procesar" para aplicar los
                   cambios. Verás el resultado en la galería inferior.</span></li>
-              <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_title">Exporta los archivos:</b>
+              <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step5_title">Exporta los archivos:</b>
                 <ul class="list-disc list-inside ml-4 mt-1">
-                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li1">ZIP:</b> <span
+                  <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step5_li1">ZIP:</b> <span
                       data-i18n="howItWorks.step5_li1_detail">Elige el formato (JPG, PNG, WebP) y el tamaño en
                       <b>píxeles
                         (px)</b> y descarga.</span></li>
-                  <li><b class="font-accent text-xl" data-i18n="howItWorks.step5_li2">PDF:</b> <span
+                  <li><b class="font-accent text-base md:text-lg lg:text-xl" data-i18n="howItWorks.step5_li2">PDF:</b> <span
                       data-i18n="howItWorks.step5_li2_detail">Elige el tamaño en <b>milímetros (mm)</b> que tendrán las
                       imágenes en el papel.</span></li>
                   <li data-i18n="howItWorks.step5_li3">Elige el tamaño del papel, la orientación y los márgenes. Podrás
@@ -462,9 +462,9 @@
       <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
         <div class="flex items-center gap-4 mb-4">
           <div
-            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-2xl md:text-3xl lg:text-4xl">
             C</div>
-          <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+          <h2 class="text-2xl md:text-4xl lg:text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
             data-i18n="results.title">Resultados</h2>
         </div>
         <div id="previewContainer"
@@ -476,17 +476,17 @@
       <section class="bg-white dark:bg-stone-900 p-6 rounded-lg shadow-lg">
         <div class="flex items-center gap-4 mb-4">
           <div
-            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-4xl">
+            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 dark:bg-amber-700 text-white flex items-center justify-center font-title font-bold text-2xl md:text-3xl lg:text-4xl">
             D</div>
-          <h2 class="text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
+          <h2 class="text-2xl md:text-4xl lg:text-5xl font-title font-bold tracking-tight text-stone-800 dark:text-stone-200"
             data-i18n="export.title">Exportar</h2>
         </div>
 
         <!-- Columna para Descargar ZIP -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div
-            class="text-lg font-body bg-stone-100 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
-            <h3 class="font-title font-bold text-3xl text-blue-700 dark:text-amber-400" data-i18n="export.zip_title">
+            class="text-base md:text-lg font-body bg-stone-100 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
+            <h3 class="font-title font-bold text-xl md:text-2xl lg:text-3xl text-blue-700 dark:text-amber-400" data-i18n="export.zip_title">
               Descargar como ZIP</h3>
             <div class="flex items-center gap-2">
               <label for="outFormat" class="dark:text-stone-300" data-i18n="export.format_label">Formato:</label>
@@ -506,7 +506,7 @@
             </div>
             <div class="pt-4">
               <button id="downloadBtn" disabled
-                class="w-full text-xl font-accent font-bold text-white px-6 py-2 rounded-md shadow bg-lime-600 hover:bg-lime-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-purple-800 dark:hover:bg-purple-900">
+                class="w-full text-base md:text-lg lg:text-xl font-accent font-bold text-white px-6 py-2 rounded-md shadow bg-lime-600 hover:bg-lime-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-purple-800 dark:hover:bg-purple-900">
                 <span class="button-text" data-i18n="export.zip_button">Descargar ZIP</span>
                 <span class="button-loader hidden flex items-center justify-center gap-2">
                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -524,8 +524,8 @@
 
           <!-- Columna para Generar PDF -->
           <div
-            class="text-lg font-body bg-stone-100 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
-            <h3 class="font-title font-bold text-3xl text-blue-700 dark:text-amber-400" data-i18n="export.pdf_title">
+            class="text-base md:text-lg font-body bg-stone-100 dark:bg-stone-800/50 p-6 rounded-lg border dark:border-stone-700 space-y-4">
+            <h3 class="font-title font-bold text-xl md:text-2xl lg:text-3xl text-blue-700 dark:text-amber-400" data-i18n="export.pdf_title">
               Generar PDF para Imprimir</h3>
             <div class="flex flex-wrap items-center gap-2">
               <label for="outWidthMm" class="dark:text-stone-300" data-i18n="export.size_mm_label">Tamaño (mm):</label>
@@ -613,7 +613,7 @@
             </div>
             <div class="pt-4">
               <button id="printPdfBtn" disabled
-                class="w-full text-xl font-accent font-bold bg-amber-600 text-white px-6 py-2 rounded-md shadow hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-red-800 dark:hover:bg-red-900">
+                class="w-full text-base md:text-lg lg:text-xl font-accent font-bold bg-amber-600 text-white px-6 py-2 rounded-md shadow hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition dark:bg-red-800 dark:hover:bg-red-900">
                 <span class="button-text" data-i18n="export.pdf_button">Generar PDF</span>
                 <span class="button-loader hidden flex items-center justify-center gap-2">
                   <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
